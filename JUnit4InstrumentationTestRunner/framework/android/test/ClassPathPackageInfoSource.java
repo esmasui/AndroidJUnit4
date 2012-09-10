@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.uphyca.testing.android;
+package android.test;
 
 import android.util.Log;
 import com.google.android.collect.Maps;

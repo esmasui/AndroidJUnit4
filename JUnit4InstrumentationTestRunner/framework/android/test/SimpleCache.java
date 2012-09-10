@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package com.uphyca.testing.android;
+package android.test;
 
-/**
- * {@hide} Not needed for SDK.
- */
-public class PackageInfoSources {
+import java.util.HashMap;
+import java.util.Map;
 
-    private static ClassPathPackageInfoSource classPathSource;
+abstract class SimpleCache<K, V> {
+    private Map<K, V> map = new HashMap<K, V>();
 
-    private PackageInfoSources() {
-    }
+    protected abstract V load(K key);
 
-    public static ClassPathPackageInfoSource forClassPath(ClassLoader classLoader) {
-        if (classPathSource == null) {
-            classPathSource = new ClassPathPackageInfoSource();
-            classPathSource.setClassLoader(classLoader);
+    final V get(K key) {
+        if (map.containsKey(key)) {
+            return map.get(key);
         }
-        return classPathSource;
+        V value = load(key);
+        map.put(key, value);
+        return value;
     }
-
 }

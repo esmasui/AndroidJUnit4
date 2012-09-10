@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.uphyca.testing.android;
+package android.test;
 
 import com.google.android.collect.Sets;
 
