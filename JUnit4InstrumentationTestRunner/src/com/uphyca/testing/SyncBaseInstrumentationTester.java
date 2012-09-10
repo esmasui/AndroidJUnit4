@@ -33,8 +33,8 @@ class SyncBaseInstrumentationTester extends SyncBaseInstrumentation {
      */
     @Override
     public void syncProvider(Uri uri,
-                                String accountName,
-                                String authority) throws Exception {
+                             String accountName,
+                             String authority) throws Exception {
         super.syncProvider(uri,
                            accountName,
                            authority);

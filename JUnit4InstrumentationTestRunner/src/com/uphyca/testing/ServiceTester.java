@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.test.ServiceTestCase;
 
-public class ServiceTester<T extends Service> extends ServiceTestCase<T> {
+class ServiceTester<T extends Service> extends ServiceTestCase<T> {
 
     public ServiceTester(Object owner,
                                Class<T> serviceClass) {

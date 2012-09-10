@@ -3,7 +3,7 @@ package com.uphyca.testing;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase;
 
-public class ActivityInstrumentationTester<T extends Activity> extends ActivityInstrumentationTestCase<T> {
+class ActivityInstrumentationTester<T extends Activity> extends ActivityInstrumentationTestCase<T> {
 
     public ActivityInstrumentationTester(Object owner,
                                                String pkg,

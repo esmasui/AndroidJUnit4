@@ -3,7 +3,7 @@ package com.uphyca.testing;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
-public class ApplicationTester<T extends Application> extends ApplicationTestCase<T> {
+class ApplicationTester<T extends Application> extends ApplicationTestCase<T> {
 
     public ApplicationTester(Object owner,
                                    Class<T> applicationClass) {

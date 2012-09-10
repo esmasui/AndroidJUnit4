@@ -3,7 +3,7 @@ package com.uphyca.testing;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 
-public class ActivityInstrumentationTester2<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
+class ActivityInstrumentationTester2<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
 
     @SuppressWarnings("deprecation")
     public ActivityInstrumentationTester2(Object owner,
