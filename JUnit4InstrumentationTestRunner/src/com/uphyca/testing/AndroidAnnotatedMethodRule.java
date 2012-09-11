@@ -13,7 +13,7 @@ import android.test.FlakyTest;
 import android.test.RepetitiveTest;
 import android.test.UiThreadTest;
 
-public class AndroidAnnotatedMethodRule implements TestRule {
+class AndroidAnnotatedMethodRule implements TestRule {
 
     private Instrumentation fInstrumentation;
 

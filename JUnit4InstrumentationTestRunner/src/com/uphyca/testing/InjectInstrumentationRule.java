@@ -5,7 +5,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 //TODO Use this class instead of Tester's initilization code.
-public class InjectInstrumentationRule implements TestRule {
+class InjectInstrumentationRule implements TestRule {
 
     private InstrumentationSupport _test;
 
