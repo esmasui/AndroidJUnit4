@@ -2,6 +2,7 @@ package com.uphyca.testing;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import android.app.Activity;
@@ -11,11 +12,15 @@ import android.os.Bundle;
 
 public abstract class SingleLaunchActivityTestCase<T extends Activity> implements InstrumentationSupport {
 
+    @Rule
+    public AndroidAnnotatedMethodRule _androidAnnotatedMethodRule;
+
     private final SingleLaunchActivityTester<T> _tester;
 
     public SingleLaunchActivityTestCase(String pkg,
-                                              Class<T> activityClass) {
+                                        Class<T> activityClass) {
         _tester = new SingleLaunchActivityTester<T>(this, pkg, activityClass);
+        _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
     @Before
@@ -40,7 +45,8 @@ public abstract class SingleLaunchActivityTestCase<T extends Activity> implement
     @Override
     public void injectInstrumentation(Instrumentation instrumentation) {
         InstrumentationTestCaseInjector injector = InstrumentationTestCaseInjector.getInstance();
-        injector.injectInstrumentation(_tester, instrumentation);
+        injector.injectInstrumentation(_tester,
+                                       instrumentation);
     }
 
     /**
@@ -81,7 +87,9 @@ public abstract class SingleLaunchActivityTestCase<T extends Activity> implement
     public final <T extends Activity> T launchActivity(String pkg,
                                                        Class<T> activityCls,
                                                        Bundle extras) {
-        return _tester.launchActivity(pkg, activityCls, extras);
+        return _tester.launchActivity(pkg,
+                                      activityCls,
+                                      extras);
     }
 
     /**
@@ -95,7 +103,9 @@ public abstract class SingleLaunchActivityTestCase<T extends Activity> implement
     public final <T extends Activity> T launchActivityWithIntent(String pkg,
                                                                  Class<T> activityCls,
                                                                  Intent intent) {
-        return _tester.launchActivityWithIntent(pkg, activityCls, intent);
+        return _tester.launchActivityWithIntent(pkg,
+                                                activityCls,
+                                                intent);
     }
 
     /**

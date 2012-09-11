@@ -2,6 +2,7 @@ package com.uphyca.testing;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -10,15 +11,20 @@ import android.os.Bundle;
 
 public abstract class ActivityInstrumentationTestCase2<T extends Activity> implements InstrumentationSupport {
 
+    @Rule
+    public AndroidAnnotatedMethodRule _androidAnnotatedMethodRule;
+
     private final ActivityInstrumentationTester2<T> _tester;
 
     public ActivityInstrumentationTestCase2(Class<T> activityClass) {
         _tester = new ActivityInstrumentationTester2<T>(this, activityClass);
+        _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
     public ActivityInstrumentationTestCase2(String pkg,
-                                                  Class<T> activityClass) {
+                                            Class<T> activityClass) {
         _tester = new ActivityInstrumentationTester2<T>(this, pkg, activityClass);
+        _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
     @Before
@@ -38,7 +44,8 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity> imple
     @Override
     public void injectInstrumentation(Instrumentation instrumentation) {
         InstrumentationTestCaseInjector injector = InstrumentationTestCaseInjector.getInstance();
-        injector.injectInstrumentation(_tester, instrumentation);
+        injector.injectInstrumentation(_tester,
+                                       instrumentation);
     }
 
     /**
@@ -71,7 +78,9 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity> imple
     public final <T extends Activity> T launchActivity(String pkg,
                                                        Class<T> activityCls,
                                                        Bundle extras) {
-        return _tester.launchActivity(pkg, activityCls, extras);
+        return _tester.launchActivity(pkg,
+                                      activityCls,
+                                      extras);
     }
 
     /**
@@ -93,7 +102,9 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity> imple
     public final <T extends Activity> T launchActivityWithIntent(String pkg,
                                                                  Class<T> activityCls,
                                                                  Intent intent) {
-        return _tester.launchActivityWithIntent(pkg, activityCls, intent);
+        return _tester.launchActivityWithIntent(pkg,
+                                                activityCls,
+                                                intent);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.uphyca.testing;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import android.app.Activity;
@@ -11,17 +12,22 @@ import android.os.Bundle;
 
 public abstract class ActivityInstrumentationTestCase<T extends Activity> implements InstrumentationSupport {
 
+    @Rule
+    public AndroidAnnotatedMethodRule _androidAnnotatedMethodRule;
+    
     private final ActivityInstrumentationTester<T> _tester;
 
     public ActivityInstrumentationTestCase(String pkg,
                                                  Class<T> activityClass) {
         _tester = new ActivityInstrumentationTester<T>(this, pkg, activityClass);
+        _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
     public ActivityInstrumentationTestCase(String pkg,
                                                  Class<T> activityClass,
                                                  boolean initialTouchMode) {
         _tester = new ActivityInstrumentationTester<T>(this, pkg, activityClass, initialTouchMode);
+        _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
     @Before

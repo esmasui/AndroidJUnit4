@@ -63,7 +63,10 @@ public abstract class ApplicationTestCase<T extends Application> {
                                                  String className,
                                                  String permission) {
         AndroidTestCaseMethodInvoker invoker = AndroidTestCaseMethodInvoker.getInstance();
-        invoker.assertActivityRequiresPermission(_tester, packageName, className, permission);
+        invoker.assertActivityRequiresPermission(_tester,
+                                                 packageName,
+                                                 className,
+                                                 permission);
     }
 
     /**
@@ -75,7 +78,9 @@ public abstract class ApplicationTestCase<T extends Application> {
     public void assertReadingContentUriRequiresPermission(Uri uri,
                                                           String permission) {
         AndroidTestCaseMethodInvoker invoker = AndroidTestCaseMethodInvoker.getInstance();
-        invoker.assertReadingContentUriRequiresPermission(_tester, uri, permission);
+        invoker.assertReadingContentUriRequiresPermission(_tester,
+                                                          uri,
+                                                          permission);
     }
 
     /**
@@ -87,7 +92,9 @@ public abstract class ApplicationTestCase<T extends Application> {
     public void assertWritingContentUriRequiresPermission(Uri uri,
                                                           String permission) {
         AndroidTestCaseMethodInvoker invoker = AndroidTestCaseMethodInvoker.getInstance();
-        invoker.assertWritingContentUriRequiresPermission(_tester, uri, permission);
+        invoker.assertWritingContentUriRequiresPermission(_tester,
+                                                          uri,
+                                                          permission);
     }
 
     /**

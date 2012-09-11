@@ -2,6 +2,7 @@ package com.uphyca.testing;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -11,10 +12,14 @@ import android.os.Bundle;
 
 public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
 
+    @Rule
+    public AndroidAnnotatedMethodRule _androidAnnotatedMethodRule;
+
     private final SyncBaseInstrumentationTester _tester;
 
     public SyncBaseInstrumentationTestCase() {
         _tester = new SyncBaseInstrumentationTester(this);
+        _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
     @Before
@@ -34,7 +39,8 @@ public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
     @Override
     public void injectInstrumentation(Instrumentation instrumentation) {
         InstrumentationTestCaseInjector injector = InstrumentationTestCaseInjector.getInstance();
-        injector.injectInstrumentation(_tester, instrumentation);
+        injector.injectInstrumentation(_tester,
+                                       instrumentation);
     }
 
     /**
@@ -67,7 +73,9 @@ public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
     public final <T extends Activity> T launchActivity(String pkg,
                                                        Class<T> activityCls,
                                                        Bundle extras) {
-        return _tester.launchActivity(pkg, activityCls, extras);
+        return _tester.launchActivity(pkg,
+                                      activityCls,
+                                      extras);
     }
 
     /**
@@ -81,7 +89,9 @@ public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
     public final <T extends Activity> T launchActivityWithIntent(String pkg,
                                                                  Class<T> activityCls,
                                                                  Intent intent) {
-        return _tester.launchActivityWithIntent(pkg, activityCls, intent);
+        return _tester.launchActivityWithIntent(pkg,
+                                                activityCls,
+                                                intent);
     }
 
     /**
@@ -136,6 +146,8 @@ public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
     protected void syncProvider(Uri uri,
                                 String accountName,
                                 String authority) throws Exception {
-        _tester.syncProvider(uri, accountName, authority);
+        _tester.syncProvider(uri,
+                             accountName,
+                             authority);
     }
 }

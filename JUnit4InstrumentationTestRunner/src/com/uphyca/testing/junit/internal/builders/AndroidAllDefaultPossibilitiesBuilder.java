@@ -3,7 +3,6 @@ package com.uphyca.testing.junit.internal.builders;
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.internal.builders.AnnotatedBuilder;
 import org.junit.internal.builders.JUnit3Builder;
-import org.junit.internal.builders.JUnit4Builder;
 
 /**
  * Modified version of
@@ -23,10 +22,5 @@ public class AndroidAllDefaultPossibilitiesBuilder extends AllDefaultPossibiliti
     @Override
     protected JUnit3Builder junit3Builder() {
         return new AndroidJUnit3Builder();
-    }
-
-    @Override
-    protected JUnit4Builder junit4Builder() {
-        return new AndroidJUnit4Builder();
     }
 }
