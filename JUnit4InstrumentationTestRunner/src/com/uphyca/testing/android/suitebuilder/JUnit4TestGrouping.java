@@ -256,6 +256,7 @@ public class JUnit4TestGrouping {
                     }
                 }
             } catch (Exception ignore) {
+            } catch (LinkageError ignore) {
             }
             return false;
         }
