@@ -35,12 +35,12 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import android.test.ClassPathPackageInfo;
-import android.test.ClassPathPackageInfoSource;
-import android.test.PackageInfoSources;
 import android.util.Log;
 
 import com.android.internal.util.Predicate;
+import com.uphyca.testing.android.ClassPathPackageInfo;
+import com.uphyca.testing.android.ClassPathPackageInfoSource;
+import com.uphyca.testing.android.PackageInfoSources;
 
 /**
  * Modified version of android.test.suitebuilder.TestGrouping.

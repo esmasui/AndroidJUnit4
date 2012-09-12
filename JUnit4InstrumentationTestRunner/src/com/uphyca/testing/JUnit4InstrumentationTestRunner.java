@@ -50,7 +50,6 @@ import android.os.Parcelable;
 import android.os.PerformanceCollector;
 import android.os.PerformanceCollector.PerformanceResultsWriter;
 import android.test.AndroidTestRunner;
-import android.test.ClassPathPackageInfoSource;
 import android.test.InstrumentationTestCase;
 import android.test.InstrumentationTestRunner;
 import android.test.RepetitiveTest;
@@ -62,6 +61,7 @@ import android.util.Log;
 
 import com.android.internal.util.Predicate;
 import com.android.internal.util.Predicates;
+import com.uphyca.testing.android.ClassPathPackageInfoSource;
 import com.uphyca.testing.android.JUnit4NoExecTestResult;
 import com.uphyca.testing.android.suitebuilder.JUnit4TestPredicates;
 import com.uphyca.testing.android.suitebuilder.JUnit4TestSuiteBuilder;
@@ -407,16 +407,6 @@ public class JUnit4InstrumentationTestRunner extends InstrumentationTestRunner i
         }
 
         testSuiteBuilder.addRequirements(getBuilderRequirements());
-        
-        // Excludes framework classes
-        testSuiteBuilder.excludePackages("com.uphyca.testing");
-        testSuiteBuilder.excludePackages("junit.framework");
-        testSuiteBuilder.excludePackages("android.test");
-
-        // TODO Change test package name.
-        // Includes test package
-        testSuiteBuilder.includePackages("com.uphyca.testing.test");
-
         
         junit4results = logOnly ? new JUnit4NoExecTestResult() : new TestResult();
 
