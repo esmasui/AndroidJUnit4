@@ -1,7 +1,6 @@
 package com.uphyca.testing;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -31,22 +30,23 @@ class AndroidAnnotatedMethodRule implements TestRule {
 
             @Override
             public void evaluate() throws Throwable {
-                String methodName = description.getMethodName();
+                //String methodName = description.getMethodName();
+                //methodName.
                 //FIXME How to get annotations via description ?
-                Method method = description.getTestClass().getMethod(methodName);
+                //Method method = description.getTestClass().getMethod(methodName);
 
                 //Following code taken from android.test.InstrumentationTestCase.
 
                 int runCount = 1;
                 boolean isRepetitive = false;
-                if (method.isAnnotationPresent(FlakyTest.class)) {
-                    runCount = method.getAnnotation(FlakyTest.class).tolerance();
-                } else if (method.isAnnotationPresent(RepetitiveTest.class)) {
-                    runCount = method.getAnnotation(RepetitiveTest.class).numIterations();
+                if (description.getAnnotation(FlakyTest.class) != null) {
+                    runCount = description.getAnnotation(FlakyTest.class).tolerance();
+                } else if (description.getAnnotation(RepetitiveTest.class) != null) {
+                    runCount = description.getAnnotation(RepetitiveTest.class).numIterations();
                     isRepetitive = true;
                 }
 
-                if (fInstrumentation != null && method.isAnnotationPresent(UiThreadTest.class)) {
+                if (fInstrumentation != null && description.getAnnotation(UiThreadTest.class) != null) {
                     final int tolerance = runCount;
                     final boolean repetitive = isRepetitive;
                     final Throwable[] exceptions = new Throwable[1];
