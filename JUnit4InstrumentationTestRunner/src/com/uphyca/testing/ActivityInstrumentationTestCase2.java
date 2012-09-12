@@ -21,6 +21,7 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity> imple
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    @Deprecated
     public ActivityInstrumentationTestCase2(String pkg,
                                             Class<T> activityClass) {
         _tester = new ActivityInstrumentationTester2<T>(this, pkg, activityClass);
