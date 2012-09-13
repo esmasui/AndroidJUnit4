@@ -19,11 +19,20 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity> imple
 
     private final ActivityInstrumentationTester2<T> _tester;
 
+    
+    /**
+     * @param activityClass
+     * @see android.test.ActivityInstrumentationTestCase2#ActivityInstrumentationTestCase2(Class)
+     */
     public ActivityInstrumentationTestCase2(Class<T> activityClass) {
         _tester = new ActivityInstrumentationTester2<T>(this, activityClass);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @param activityClass
+     * @see android.test.ActivityInstrumentationTestCase2#ActivityInstrumentationTestCase2(String, Class)
+     */
     @Deprecated
     public ActivityInstrumentationTestCase2(String pkg,
                                             Class<T> activityClass) {
@@ -31,11 +40,19 @@ public abstract class ActivityInstrumentationTestCase2<T extends Activity> imple
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ActivityInstrumentationTestCase2#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ActivityInstrumentationTestCase2#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

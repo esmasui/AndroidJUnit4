@@ -14,15 +14,26 @@ public class AndroidTestCase {
 
     private final AndroidTester _tester;
 
+    /**
+     * @see android.test.AndroidTestCase#AndroidTestCase()
+     */
     public AndroidTestCase() {
         _tester = new AndroidTester(this);
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.AndroidTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.AndroidTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

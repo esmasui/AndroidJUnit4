@@ -21,12 +21,22 @@ public abstract class ActivityInstrumentationTestCase<T extends Activity> implem
     
     private final ActivityInstrumentationTester<T> _tester;
 
+    /**
+     * @param pkg
+     * @param activityClass
+     * @see android.test.ActivityInstrumentationTestCase#ActivityInstrumentationTestCase(String, Class)
+     */
     public ActivityInstrumentationTestCase(String pkg,
                                                  Class<T> activityClass) {
         _tester = new ActivityInstrumentationTester<T>(this, pkg, activityClass);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @param pkg
+     * @param activityClass
+     * @see android.test.ActivityInstrumentationTestCase#ActivityInstrumentationTestCase(String, Class, boolean)
+     */
     public ActivityInstrumentationTestCase(String pkg,
                                                  Class<T> activityClass,
                                                  boolean initialTouchMode) {
@@ -34,11 +44,19 @@ public abstract class ActivityInstrumentationTestCase<T extends Activity> implem
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ActivityInstrumentationTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ActivityInstrumentationTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

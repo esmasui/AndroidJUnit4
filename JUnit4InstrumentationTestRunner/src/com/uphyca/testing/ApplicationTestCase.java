@@ -15,15 +15,27 @@ public abstract class ApplicationTestCase<T extends Application> {
 
     private final ApplicationTester<T> _tester;
 
+    /**
+     * @param applicationClass
+     * @see android.test.ApplicationTestCase#ApplicationTestCase(Class)
+     */
     public ApplicationTestCase(Class<T> applicationClass) {
         _tester = new ApplicationTester<T>(this, applicationClass);
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ApplicationTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ApplicationTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

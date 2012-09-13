@@ -17,15 +17,26 @@ public class LoaderTestCase {
 
     private final LoaderTester _tester;
 
+    /**
+     * @see android.test.LoaderTestCase#LoaderTestCase()
+     */
     public LoaderTestCase() {
         _tester = new LoaderTester(this);
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.LoaderTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.LoaderTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

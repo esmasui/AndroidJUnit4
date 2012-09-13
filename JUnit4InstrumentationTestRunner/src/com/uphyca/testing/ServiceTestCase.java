@@ -18,15 +18,27 @@ public abstract class ServiceTestCase<T extends Service> {
 
     private final ServiceTester<T> _tester;
 
+    /**
+     * @param serviceClass
+     * @see android.test.ServiceTestCase#ServiceTestCase(Class)
+     */
     public ServiceTestCase(Class<T> serviceClass) {
         _tester = new ServiceTester<T>(this, serviceClass);
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ServiceTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ServiceTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

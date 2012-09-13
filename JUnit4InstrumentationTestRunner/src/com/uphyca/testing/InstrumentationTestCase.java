@@ -19,16 +19,27 @@ public class InstrumentationTestCase implements InstrumentationSupport {
 
     private final InstrumentationTester _tester;
 
+    /**
+     * @see android.test.InstrumentationTestCase#InstrumentationTestCase()
+     */
     public InstrumentationTestCase() {
         _tester = new InstrumentationTester(this);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.InstrumentationTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.InstrumentationTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

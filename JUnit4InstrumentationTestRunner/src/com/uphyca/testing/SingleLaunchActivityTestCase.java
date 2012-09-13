@@ -20,17 +20,30 @@ public abstract class SingleLaunchActivityTestCase<T extends Activity> implement
 
     private final SingleLaunchActivityTester<T> _tester;
 
+    /**
+     * @param pkg
+     * @param activityClass
+     * @see android.test.SingleLaunchActivityTestCase#SingleLaunchActivityTestCase(String, Class)
+     */
     public SingleLaunchActivityTestCase(String pkg,
                                         Class<T> activityClass) {
         _tester = new SingleLaunchActivityTester<T>(this, pkg, activityClass);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.SingleLaunchActivityTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.SingleLaunchActivityTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

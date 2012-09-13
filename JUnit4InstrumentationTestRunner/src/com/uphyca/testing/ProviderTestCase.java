@@ -23,17 +23,30 @@ public abstract class ProviderTestCase<T extends ContentProvider> implements Ins
 
     private final ProviderTester<T> _tester;
 
+    /**
+     * @param providerClass
+     * @param providerAuthority
+     * @see android.test.ProviderTestCase#ProviderTestCase(Class, String)
+     */
     public ProviderTestCase(Class<T> providerClass,
                             String providerAuthority) {
         _tester = new ProviderTester<T>(this, providerClass, providerAuthority);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ProviderTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ProviderTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

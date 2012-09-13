@@ -19,16 +19,27 @@ public class ActivityTestCase implements InstrumentationSupport {
 
     private final ActivityTester _tester;
 
+    /**
+     * @see android.test.ActivityTestCase#ActivityTestCase()
+     */
     public ActivityTestCase() {
         _tester = new ActivityTester(this);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ActivityTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ActivityTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

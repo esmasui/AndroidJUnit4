@@ -20,16 +20,27 @@ public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
 
     private final SyncBaseInstrumentationTester _tester;
 
+    /**
+     * @see android.test.SyncBaseInstrumentation#SyncBaseInstrumentation()
+     */
     public SyncBaseInstrumentationTestCase() {
         _tester = new SyncBaseInstrumentationTester(this);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.SyncBaseInstrumentation#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.SyncBaseInstrumentation#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

@@ -14,23 +14,35 @@ import android.os.Bundle;
 /**
  * @see android.test.ActivityUnitTestCase
  */
-public class ActivityUnitTestCase<T extends Activity> implements InstrumentationSupport {
+public abstract class ActivityUnitTestCase<T extends Activity> implements InstrumentationSupport {
 
     @Rule
     public AndroidAnnotatedMethodRule _androidAnnotatedMethodRule;
 
     private final ActivityUnitTester<T> _tester;
 
+    /**
+     * @param activityClass
+     * @see android.test.ActivityUnitTestCase#ActivityUnitTestCase(Class)
+     */
     public ActivityUnitTestCase(Class<T> activityClass) {
         _tester = new ActivityUnitTester<T>(this, activityClass);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ActivityUnitTestCase#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ActivityUnitTestCase#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();

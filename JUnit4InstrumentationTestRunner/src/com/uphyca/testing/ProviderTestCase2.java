@@ -17,16 +17,29 @@ public abstract class ProviderTestCase2<T extends ContentProvider> {
 
     private final ProviderTester2<T> _tester;
 
+    /**
+     * @param providerClass
+     * @param providerAuthority
+     * @see android.test.ProviderTestCase2#ProviderTestCase2(Class, String)
+     */
     public ProviderTestCase2(Class<T> providerClass,
                                    String providerAuthority) {
         _tester = new ProviderTester2<T>(this, providerClass, providerAuthority);
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ProviderTestCase2#setUp()
+     */
     @Before
     public void setUp() throws Exception {
         _tester.setUp();
     }
 
+    /**
+     * @throws Exception
+     * @see android.test.ProviderTestCase2#tearDown()
+     */
     @After
     public void tearDown() throws Exception {
         _tester.tearDown();
