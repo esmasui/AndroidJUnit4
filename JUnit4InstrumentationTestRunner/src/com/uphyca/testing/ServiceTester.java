@@ -14,11 +14,17 @@ class ServiceTester<T extends Service> extends ServiceTestCase<T> {
         Infrastructure.setPerformanceWriterIfPerformanceCollectorTestCase(owner);
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ServiceTestCase#setUp()
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ServiceTestCase#tearDown()
+     */
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

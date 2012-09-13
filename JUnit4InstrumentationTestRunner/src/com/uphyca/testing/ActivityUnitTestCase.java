@@ -11,6 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+/**
+ * @see android.test.ActivityUnitTestCase
+ */
 public class ActivityUnitTestCase<T extends Activity> implements InstrumentationSupport {
 
     @Rule
@@ -71,6 +74,7 @@ public class ActivityUnitTestCase<T extends Activity> implements Instrumentation
      * @see android.test.InstrumentationTestCase#launchActivity(java.lang.String,
      *      java.lang.Class, android.os.Bundle)
      */
+    @SuppressWarnings("hiding")
     public final <T extends Activity> T launchActivity(String pkg,
                                                        Class<T> activityCls,
                                                        Bundle extras) {
@@ -87,6 +91,7 @@ public class ActivityUnitTestCase<T extends Activity> implements Instrumentation
      * @see android.test.InstrumentationTestCase#launchActivityWithIntent(java.lang.String,
      *      java.lang.Class, android.content.Intent)
      */
+    @SuppressWarnings("hiding")
     public final <T extends Activity> T launchActivityWithIntent(String pkg,
                                                                  Class<T> activityCls,
                                                                  Intent intent) {

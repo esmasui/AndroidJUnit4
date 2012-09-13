@@ -10,6 +10,9 @@ import android.net.Uri;
 import android.test.IsolatedContext;
 import android.test.mock.MockContentResolver;
 
+/**
+ * @see android.test.ProviderTestCase2
+ */
 public abstract class ProviderTestCase2<T extends ContentProvider> {
 
     private final ProviderTester2<T> _tester;

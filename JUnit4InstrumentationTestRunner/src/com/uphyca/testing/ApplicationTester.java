@@ -12,11 +12,17 @@ class ApplicationTester<T extends Application> extends ApplicationTestCase<T> {
         Infrastructure.setPerformanceWriterIfPerformanceCollectorTestCase(owner);
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ApplicationTestCase#setUp()
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ApplicationTestCase#tearDown()
+     */
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

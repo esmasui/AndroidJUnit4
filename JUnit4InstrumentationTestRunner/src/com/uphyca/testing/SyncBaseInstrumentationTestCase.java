@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+/**
+ * @see android.test.SyncBaseInstrumentation
+ */
 public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
 
     @Rule

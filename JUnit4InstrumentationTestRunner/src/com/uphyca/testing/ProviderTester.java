@@ -13,11 +13,17 @@ class ProviderTester<T extends ContentProvider> extends ProviderTestCase<T> {
         Infrastructure.setPerformanceWriterIfPerformanceCollectorTestCase(owner);
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ProviderTestCase#setUp()
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ProviderTestCase#tearDown()
+     */
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

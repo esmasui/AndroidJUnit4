@@ -14,11 +14,17 @@ class ActivityUnitTester<T extends Activity> extends ActivityUnitTestCase<T> {
         Infrastructure.setPerformanceWriterIfPerformanceCollectorTestCase(owner);
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ActivityUnitTestCase#setUp()
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ActivityUnitTestCase#tearDown()
+     */
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

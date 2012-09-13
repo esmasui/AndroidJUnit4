@@ -8,6 +8,9 @@ import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 
+/**
+ * @see android.test.ApplicationTestCase
+ */
 public abstract class ApplicationTestCase<T extends Application> {
 
     private final ApplicationTester<T> _tester;

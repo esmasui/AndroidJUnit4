@@ -12,6 +12,10 @@ import android.os.Bundle;
 import android.test.IsolatedContext;
 import android.test.mock.MockContentResolver;
 
+/**
+ * @see android.test.ProviderTestCase
+ */
+@Deprecated
 public abstract class ProviderTestCase<T extends ContentProvider> implements InstrumentationSupport {
 
     @Rule
@@ -42,8 +46,7 @@ public abstract class ProviderTestCase<T extends ContentProvider> implements Ins
     @Override
     public void injectInstrumentation(Instrumentation instrumentation) {
         InstrumentationTestCaseInjector injector = InstrumentationTestCaseInjector.getInstance();
-        injector.injectInstrumentation(_tester,
-                                       instrumentation);
+        injector.injectInstrumentation(_tester, instrumentation);
     }
 
     /**
@@ -81,12 +84,11 @@ public abstract class ProviderTestCase<T extends ContentProvider> implements Ins
      * @see android.test.InstrumentationTestCase#launchActivity(java.lang.String,
      *      java.lang.Class, android.os.Bundle)
      */
+    @SuppressWarnings("hiding")
     public final <T extends Activity> T launchActivity(String pkg,
                                                        Class<T> activityCls,
                                                        Bundle extras) {
-        return _tester.launchActivity(pkg,
-                                      activityCls,
-                                      extras);
+        return _tester.launchActivity(pkg, activityCls, extras);
     }
 
     /**
@@ -113,12 +115,11 @@ public abstract class ProviderTestCase<T extends ContentProvider> implements Ins
      * @see android.test.InstrumentationTestCase#launchActivityWithIntent(java.lang.String,
      *      java.lang.Class, android.content.Intent)
      */
+    @SuppressWarnings("hiding")
     public final <T extends Activity> T launchActivityWithIntent(String pkg,
                                                                  Class<T> activityCls,
                                                                  Intent intent) {
-        return _tester.launchActivityWithIntent(pkg,
-                                                activityCls,
-                                                intent);
+        return _tester.launchActivityWithIntent(pkg, activityCls, intent);
     }
 
     /**

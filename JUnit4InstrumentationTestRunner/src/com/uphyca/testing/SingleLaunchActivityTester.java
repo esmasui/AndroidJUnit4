@@ -13,11 +13,17 @@ class SingleLaunchActivityTester<T extends Activity> extends SingleLaunchActivit
         Infrastructure.setPerformanceWriterIfPerformanceCollectorTestCase(owner);
     }
 
+    /* (non-Javadoc)
+     * @see android.test.SingleLaunchActivityTestCase#setUp()
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
+    /* (non-Javadoc)
+     * @see android.test.SingleLaunchActivityTestCase#tearDown()
+     */
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

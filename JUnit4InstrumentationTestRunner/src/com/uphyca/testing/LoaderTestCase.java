@@ -9,6 +9,9 @@ import android.content.Context;
 import android.content.Loader;
 import android.net.Uri;
 
+/**
+ * @see android.test.LoaderTestCase
+ */
 @TargetApi(11)
 public class LoaderTestCase {
 

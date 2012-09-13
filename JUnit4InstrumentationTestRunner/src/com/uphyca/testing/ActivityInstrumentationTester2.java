@@ -23,11 +23,17 @@ class ActivityInstrumentationTester2<T extends Activity> extends ActivityInstrum
         Infrastructure.setPerformanceWriterIfPerformanceCollectorTestCase(owner);
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ActivityInstrumentationTestCase2#setUp()
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
+    /* (non-Javadoc)
+     * @see android.test.ActivityInstrumentationTestCase2#tearDown()
+     */
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

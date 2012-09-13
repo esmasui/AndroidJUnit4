@@ -10,11 +10,17 @@ class SyncBaseInstrumentationTester extends SyncBaseInstrumentation {
         Infrastructure.setPerformanceWriterIfPerformanceCollectorTestCase(owner);
     }
 
+    /* (non-Javadoc)
+     * @see android.test.SyncBaseInstrumentation#setUp()
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
+    /* (non-Javadoc)
+     * @see android.test.InstrumentationTestCase#tearDown()
+     */
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

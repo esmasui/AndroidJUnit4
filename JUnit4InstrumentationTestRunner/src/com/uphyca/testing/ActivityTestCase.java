@@ -9,6 +9,9 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
+/**
+ * @see android.test.ActivityTestCase
+ */
 public class ActivityTestCase implements InstrumentationSupport {
 
     @Rule

@@ -7,6 +7,9 @@ import org.junit.Test;
 import android.content.Context;
 import android.net.Uri;
 
+/**
+ * @see android.test.AndroidTestCase
+ */
 public class AndroidTestCase {
 
     private final AndroidTester _tester;

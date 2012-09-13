@@ -9,11 +9,17 @@ class AndroidTester extends AndroidTestCase {
         Infrastructure.setPerformanceWriterIfPerformanceCollectorTestCase(owner);
     }
 
+    /* (non-Javadoc)
+     * @see android.test.AndroidTestCase#setUp()
+     */
     @Override
     public void setUp() throws Exception {
         super.setUp();
     }
 
+    /* (non-Javadoc)
+     * @see android.test.AndroidTestCase#tearDown()
+     */
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

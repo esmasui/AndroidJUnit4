@@ -11,6 +11,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.IBinder;
 
+/**
+ * @see android.test.ServiceTestCase
+ */
 public abstract class ServiceTestCase<T extends Service> {
 
     private final ServiceTester<T> _tester;
