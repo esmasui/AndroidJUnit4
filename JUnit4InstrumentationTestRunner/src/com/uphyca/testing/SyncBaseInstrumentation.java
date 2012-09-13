@@ -13,7 +13,7 @@ import android.os.Bundle;
 /**
  * @see android.test.SyncBaseInstrumentation
  */
-public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
+public class SyncBaseInstrumentation implements InstrumentationSupport {
 
     @Rule
     public AndroidAnnotatedMethodRule _androidAnnotatedMethodRule;
@@ -23,7 +23,7 @@ public class SyncBaseInstrumentationTestCase implements InstrumentationSupport {
     /**
      * @see android.test.SyncBaseInstrumentation#SyncBaseInstrumentation()
      */
-    public SyncBaseInstrumentationTestCase() {
+    public SyncBaseInstrumentation() {
         _tester = new SyncBaseInstrumentationTester(this);
         _androidAnnotatedMethodRule = new AndroidAnnotatedMethodRule(_tester.getInstrumentation());
     }
