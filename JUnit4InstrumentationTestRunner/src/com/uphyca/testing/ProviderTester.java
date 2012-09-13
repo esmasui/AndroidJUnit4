@@ -3,6 +3,7 @@ package com.uphyca.testing;
 import android.content.ContentProvider;
 import android.test.ProviderTestCase;
 
+@Deprecated
 class ProviderTester<T extends ContentProvider> extends ProviderTestCase<T> {
 
     public ProviderTester(Object owner,
