@@ -124,7 +124,7 @@
                <version>1.5.0</version>
                <executions>
                    <execution>
-                       <phase>generate-test-sources</phase>
+                       <phase>process-resources</phase>
                        <goals>
                            <goal>replace</goal>
                        </goals>
