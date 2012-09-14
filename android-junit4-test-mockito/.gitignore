@@ -1,0 +1,13 @@
+.classpath
+.project
+.settings/
+
+target/
+
+gen/
+bin/
+libs/
+
+!libs/dexmaker-20120622.jar
+!libs/mockito-all-1.9.5-rc1-no-hamcrest.jar
+
