@@ -15,6 +15,7 @@
  */
 
 package com.uphyca.testing.android.suitebuilder;
+
 import static com.uphyca.testing.android.suitebuilder.JUnit4TestGrouping.SORT_BY_FULLY_QUALIFIED_NAME;
 import static com.uphyca.testing.android.suitebuilder.JUnit4TestPredicates.REJECT_SUPPRESSED;
 
@@ -36,7 +37,6 @@ import android.content.Context;
 
 import com.android.internal.util.Predicate;
 import com.google.android.collect.Lists;
-import com.uphyca.testing.junit.experimental.AndroidParallelComputer;
 import com.uphyca.testing.junit.internal.builders.AndroidAllDefaultPossibilitiesBuilder;
 
 /**
@@ -53,9 +53,9 @@ public class JUnit4TestSuiteBuilder {
     private String currentClassname;
     private String suiteName;
     private Class<?>[] testSuite;
-    
+
     private List<Description> descriptions = Lists.newArrayList();
-    
+
     /**
      * The given name is automatically prefixed with the package containing the tests to be run.
      * If more than one package is specified, the first is used.
@@ -68,7 +68,8 @@ public class JUnit4TestSuiteBuilder {
         this(clazz.getName(), clazz.getClassLoader());
     }
 
-    public JUnit4TestSuiteBuilder(String name, ClassLoader classLoader) {
+    public JUnit4TestSuiteBuilder(String name,
+                                  ClassLoader classLoader) {
         this.suiteName = name;
         this.testGrouping.setClassLoader(classLoader);
 
@@ -76,22 +77,27 @@ public class JUnit4TestSuiteBuilder {
     }
 
     /** @hide pending API Council approval */
-    public JUnit4TestSuiteBuilder addTestClassByName(String testClassName, String testMethodName,
-            Context context) {
+    public JUnit4TestSuiteBuilder addTestClassByName(String testClassName,
+                                                     String testMethodName,
+                                                     Context context) {
 
         Description desc;
-        if(testMethodName == null){
-            desc = Description.createSuiteDescription(loadTestClass(context, testClassName));
-        }else{
-            desc = Description.createTestDescription(loadTestClass(context, testClassName), testMethodName);
+        if (testMethodName == null) {
+            desc = Description.createSuiteDescription(loadTestClass(context,
+                                                                    testClassName));
+        } else {
+            desc = Description.createTestDescription(loadTestClass(context,
+                                                                   testClassName),
+                                                     testMethodName);
         }
-        
+
         this.descriptions.add(desc);
-        
+
         return this;
     }
 
-    private Class<?> loadTestClass(Context context, String testClassName) {
+    private Class<?> loadTestClass(Context context,
+                                   String testClassName) {
         try {
             return (Class<?>) context.getClassLoader().loadClass(testClassName);
         } catch (ClassNotFoundException e) {
@@ -99,11 +105,10 @@ public class JUnit4TestSuiteBuilder {
         }
         return null;
     }
-    
+
     protected void runFailed(String message) {
         throw new RuntimeException(message);
     }
-
 
     /**
      * Include all tests that satisfy the requirements in the given packages and all sub-packages,
@@ -155,8 +160,7 @@ public class JUnit4TestSuiteBuilder {
         // should be one level below this class in the stack trace.
         for (int i = 0; i < stackTraceElements.length; i++) {
             StackTraceElement element = stackTraceElements[i];
-            if (thisClassName.equals(element.getClassName())
-                    && "includeAllPackagesUnderHere".equals(element.getMethodName())) {
+            if (thisClassName.equals(element.getClassName()) && "includeAllPackagesUnderHere".equals(element.getMethodName())) {
                 // We've found this class in the call stack. The calling class must be the
                 // next class in the stack.
                 callingClassName = stackTraceElements[i + 1].getClassName();
@@ -189,7 +193,7 @@ public class JUnit4TestSuiteBuilder {
      */
     public final Request build() {
         List<Class<?>> testCaseClasses = Lists.newArrayList();
-        
+
         //FIXME Supports following options
         // - Filter test run to tests with given annotation: adb shell am instrument -w -e annotation com.android.foo.MyAnnotation com.android.foo/android.test.InstrumentationTestRunner
         // - Run the instrumentation using "adb shell am instrument -w", with no optional arguments, to run all tests (except performance tests).
@@ -199,46 +203,47 @@ public class JUnit4TestSuiteBuilder {
         Filter filters = null;
 
         if (testSuite != null) {
-            for (Class<?> clazz: testSuite){
+            for (Class<?> clazz : testSuite) {
                 testCaseClasses.add(clazz);
-//                Filter newFilter = Filters.matchSuiteDescription(Description.createSuiteDescription(clazz));
-//                if (filters == null) {
-//                    filters = newFilter;
-//                } else {
-//                    filters = Filters.union(filters, newFilter);
-//                }
+                //                Filter newFilter = Filters.matchSuiteDescription(Description.createSuiteDescription(clazz));
+                //                if (filters == null) {
+                //                    filters = newFilter;
+                //                } else {
+                //                    filters = Filters.union(filters, newFilter);
+                //                }
             }
         }
 
-        for (Class<?> clazz: testGrouping.getTestCaseClasses()){
+        for (Class<?> clazz : testGrouping.getTestCaseClasses()) {
             testCaseClasses.add(clazz);
-//            Filter newFilter = Filters.matchSuiteDescription(Description.createSuiteDescription(clazz));
-//            if (filters == null) {
-//                filters = newFilter;
-//            } else {
-//                filters = Filters.union(filters, newFilter);
-//            }
+            //            Filter newFilter = Filters.matchSuiteDescription(Description.createSuiteDescription(clazz));
+            //            if (filters == null) {
+            //                filters = newFilter;
+            //            } else {
+            //                filters = Filters.union(filters, newFilter);
+            //            }
         }
-        
-        for (Description desc: descriptions) {
+
+        for (Description desc : descriptions) {
             testCaseClasses.add(desc.getTestClass());
-//            //if (desc.isTest() || desc.isSuite()) {
-//                Filter newFilter = (desc.getMethodName() != null) ? Filter.matchMethodDescription(desc) : Filters.matchSuiteDescription(desc);
-//                if (filters == null) {
-//                    filters = newFilter;
-//                } else {
-//                    filters = Filters.union(filters, newFilter);
-//                }
-//            //}
+            //            //if (desc.isTest() || desc.isSuite()) {
+            //                Filter newFilter = (desc.getMethodName() != null) ? Filter.matchMethodDescription(desc) : Filters.matchSuiteDescription(desc);
+            //                if (filters == null) {
+            //                    filters = newFilter;
+            //                } else {
+            //                    filters = Filters.union(filters, newFilter);
+            //                }
+            //            //}
         }
 
         //FIXME Supports subclasses of Computer such as ParallelComputer.
-        Request req = classes(new AndroidParallelComputer(true, false), testCaseClasses.toArray(new Class[testCaseClasses.size()]));
+        Request req = classes(new Computer(),
+                              testCaseClasses.toArray(new Class[testCaseClasses.size()]));
 
         Filter requirements = new Filter() {
             @Override
             public boolean shouldRun(Description description) {
-                if (description.isTest()){
+                if (description.isTest()) {
                     return satisfiesAllPredicates(description);
                 }
                 // explicitly check if any children want to run
@@ -247,13 +252,13 @@ public class JUnit4TestSuiteBuilder {
                         return true;
                 return false;
             }
-            
+
             @Override
             public String describe() {
                 return "requirements";
             }
         };
-        
+
         if (filters == null) {
             filters = requirements;
         } else {
@@ -264,7 +269,7 @@ public class JUnit4TestSuiteBuilder {
 
         return req;
     }
-    
+
     /**
      * Create a <code>Request</code> that, when processed, will run all the tests
      * in a set of classes.
@@ -272,18 +277,18 @@ public class JUnit4TestSuiteBuilder {
      * @param classes the classes containing the tests
      * @return a <code>Request</code> that will cause all tests in the classes to be run
      */
-    public Request classes(Computer computer, Class<?>... classes) {
+    public Request classes(Computer computer,
+                           Class<?>... classes) {
         try {
             //For Android
-            AllDefaultPossibilitiesBuilder builder= new AndroidAllDefaultPossibilitiesBuilder(true);
-            Runner suite= computer.getSuite(builder, classes);
+            AllDefaultPossibilitiesBuilder builder = new AndroidAllDefaultPossibilitiesBuilder(true);
+            Runner suite = computer.getSuite(builder,
+                                             classes);
             return Request.runner(suite);
         } catch (InitializationError e) {
-            throw new RuntimeException(
-                    "Bug in saff's brain: Suite constructor, called as above, should always complete");
+            throw new RuntimeException("Bug in saff's brain: Suite constructor, called as above, should always complete");
         }
     }
-    
 
     /**
      * Subclasses use this method to determine the name of the suite.
@@ -303,27 +308,28 @@ public class JUnit4TestSuiteBuilder {
      */
     public final JUnit4TestSuiteBuilder addRequirements(Predicate<Description>... predicates) {
         ArrayList<Predicate<Description>> list = new ArrayList<Predicate<Description>>();
-        Collections.addAll(list, predicates);
+        Collections.addAll(list,
+                           predicates);
         return addRequirements(list);
     }
 
-// FIXME Use FailedToCreateTests.
-//    /**
-//     * A special {@link junit.framework.TestCase} used to indicate a failure during the build()
-//     * step.
-//     */
-//    public static class FailedToCreateTests extends TestCase {
-//        private final Exception exception;
-//
-//        public FailedToCreateTests(Exception exception) {
-//            super("testSuiteConstructionFailed");
-//            this.exception = exception;
-//        }
-//
-//        public void testSuiteConstructionFailed() {
-//            throw new RuntimeException("Exception during suite construction", exception);
-//        }
-//    }
+    // FIXME Use FailedToCreateTests.
+    //    /**
+    //     * A special {@link junit.framework.TestCase} used to indicate a failure during the build()
+    //     * step.
+    //     */
+    //    public static class FailedToCreateTests extends TestCase {
+    //        private final Exception exception;
+    //
+    //        public FailedToCreateTests(Exception exception) {
+    //            super("testSuiteConstructionFailed");
+    //            this.exception = exception;
+    //        }
+    //
+    //        public void testSuiteConstructionFailed() {
+    //            throw new RuntimeException("Exception during suite construction", exception);
+    //        }
+    //    }
 
     /**
      * @return the test package that represents the packages that were included for our test suite.
@@ -344,7 +350,8 @@ public class JUnit4TestSuiteBuilder {
     }
 
     private static String parsePackageNameFromClassName(String className) {
-        return className.substring(0, className.lastIndexOf('.'));
+        return className.substring(0,
+                                   className.lastIndexOf('.'));
     }
 
     public void addTestSuite(Class<?>[] testSuite) {
