@@ -1,16 +1,9 @@
-# built application files
-*.apk
-*.ap_
+.classpath
+.project
+.settings/
 
-# files for the dex VM
-*.dex
+target/
 
-# Java class files
-*.class
-
-# generated files
-bin/
 gen/
-
-# Local configuration file (sdk path, etc)
-local.properties
+bin/
+libs/
