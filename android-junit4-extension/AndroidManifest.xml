@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.uphyca.testing.junit4ext"
+    package="com.uphyca.testing.junit4.extension"
     android:versionCode="1"
     android:versionName="1.0">
 
