@@ -36,6 +36,7 @@ import android.content.Context;
 
 import com.android.internal.util.Predicate;
 import com.google.android.collect.Lists;
+import com.uphyca.testing.junit.experimental.AndroidParallelComputer;
 import com.uphyca.testing.junit.internal.builders.AndroidAllDefaultPossibilitiesBuilder;
 
 /**
@@ -232,7 +233,7 @@ public class JUnit4TestSuiteBuilder {
         }
 
         //FIXME Supports subclasses of Computer such as ParallelComputer.
-        Request req = classes(new Computer(), testCaseClasses.toArray(new Class[testCaseClasses.size()]));
+        Request req = classes(new AndroidParallelComputer(true, false), testCaseClasses.toArray(new Class[testCaseClasses.size()]));
 
         Filter requirements = new Filter() {
             @Override
