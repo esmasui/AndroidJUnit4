@@ -16,13 +16,13 @@
 
 package android.test;
 
+import java.lang.reflect.Field;
+
+import junit.framework.TestCase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import junit.framework.TestCase;
-
-import java.lang.reflect.Field;
 
 /**
  * Extend this if you need to access Resources or other things that depend on Activity Context.

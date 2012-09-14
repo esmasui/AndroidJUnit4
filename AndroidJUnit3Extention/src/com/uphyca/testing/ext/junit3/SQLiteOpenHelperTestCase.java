@@ -14,16 +14,14 @@
  * limitations under the License
  */
 
-package com.uphyca.testing;
+package com.uphyca.testing.ext.junit3;
 
 import java.io.File;
-
-import org.junit.After;
-import org.junit.Before;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.test.AndroidTestCase;
 import android.test.IsolatedContext;
 import android.test.RenamingDelegatingContext;
 import android.test.mock.MockContentResolver;
@@ -61,9 +59,8 @@ public abstract class SQLiteOpenHelperTestCase<T extends SQLiteOpenHelper> exten
         _openHelperClass = openHelperClass;
     }
 
-    @Before
     @Override
-    public void setUp() throws Exception {
+    protected void setUp() throws Exception {
         super.setUp();
         final String filenamePrefix = "test.";
         RenamingDelegatingContext targetContextWrapper = new RenamingDelegatingContext(new MockContext2(), getContext(), filenamePrefix);
@@ -71,9 +68,8 @@ public abstract class SQLiteOpenHelperTestCase<T extends SQLiteOpenHelper> exten
         _openHelper = createSQLiteOpenHelper(_openHelperContext);
     }
 
-    @After
     @Override
-    public void tearDown() throws Exception {
+    protected void tearDown() throws Exception {
         _openHelper.close();
         super.tearDown();
     }

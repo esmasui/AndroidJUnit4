@@ -40,7 +40,9 @@ import dalvik.system.DexFile;
  */
 public class ClassPathPackageInfoSource {
 
-    private static final Pattern sFrameworkClassPattern = Pattern.compile("(^com\\.uphyca\\.testing\\.[^.]+$|^jnit\\.framework\\.[^.]+$|^android\\.test\\.[^.]+$)");
+    private static final Pattern sFrameworkClassPattern = Pattern.compile("(^com\\.uphyca\\.testing\\.[^.]+$|^com\\.uphyca\\.testing\\.android\\..+|^com\\.uphyca\\.testing\\.junit\\..+|^com\\.uphyca\\.testing\\.ext\\..+|^org\\.junit\\..+|^jnit\\.framework\\..+|^android\\..+)");
+    //private static final Pattern sFrameworkClassPattern = Pattern.compile("(^com\\.uphyca\\.testing\\.[^.]+$|^org\\.junit\\..+$|^jnit\\.framework\\..+$|^android\\.test\\..+$)");
+    //private static final Pattern sFrameworkClassPattern = Pattern.compile("(^jnit\\.framework\\..+$|^android\\.test\\..+$)");
 
     private static final String CLASS_EXTENSION = ".class";
 

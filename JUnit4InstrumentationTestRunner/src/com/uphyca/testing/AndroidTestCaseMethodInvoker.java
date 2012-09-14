@@ -5,18 +5,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.test.AndroidTestCase;
 
-abstract class AndroidTestCaseMethodInvoker {
+public abstract class AndroidTestCaseMethodInvoker {
 
-    abstract void assertActivityRequiresPermission(AndroidTestCase test,
+    public abstract void assertActivityRequiresPermission(AndroidTestCase test,
                                                    String packageName,
                                                    String className,
                                                    String permission);
 
-    abstract void assertReadingContentUriRequiresPermission(AndroidTestCase test,
+    public abstract void assertReadingContentUriRequiresPermission(AndroidTestCase test,
                                                             Uri uri,
                                                             String permission);
 
-    abstract void assertWritingContentUriRequiresPermission(AndroidTestCase test,
+    public abstract void assertWritingContentUriRequiresPermission(AndroidTestCase test,
                                                             Uri uri,
                                                             String permission);
 
@@ -32,7 +32,7 @@ abstract class AndroidTestCaseMethodInvoker {
         }
     }
 
-    static AndroidTestCaseMethodInvoker getInstance() {
+    public static AndroidTestCaseMethodInvoker getInstance() {
         return sInvoker;
     }
 
@@ -41,7 +41,7 @@ abstract class AndroidTestCaseMethodInvoker {
         
         @TargetApi(4)
         @Override
-        void assertActivityRequiresPermission(AndroidTestCase test,
+        public void assertActivityRequiresPermission(AndroidTestCase test,
                                               String packageName,
                                               String className,
                                               String permission) {
@@ -52,7 +52,7 @@ abstract class AndroidTestCaseMethodInvoker {
         
         @TargetApi(4)
         @Override
-        void assertReadingContentUriRequiresPermission(AndroidTestCase test,
+        public void assertReadingContentUriRequiresPermission(AndroidTestCase test,
                                                        Uri uri,
                                                        String permission) {
             test.assertReadingContentUriRequiresPermission(uri, permission);
@@ -61,7 +61,7 @@ abstract class AndroidTestCaseMethodInvoker {
 
         @TargetApi(4)
         @Override
-        void assertWritingContentUriRequiresPermission(AndroidTestCase test,
+        public void assertWritingContentUriRequiresPermission(AndroidTestCase test,
                                                        Uri uri,
                                                        String permission) {
             test.assertWritingContentUriRequiresPermission(uri, permission);
@@ -71,7 +71,7 @@ abstract class AndroidTestCaseMethodInvoker {
     private static final class CupcakeAndroidTestCaseMethodInvoker extends AndroidTestCaseMethodInvoker {
 
         @Override
-        void assertActivityRequiresPermission(AndroidTestCase test,
+        public void assertActivityRequiresPermission(AndroidTestCase test,
                                               String packageName,
                                               String className,
                                               String permission) {
@@ -79,14 +79,14 @@ abstract class AndroidTestCaseMethodInvoker {
         }
 
         @Override
-        void assertReadingContentUriRequiresPermission(AndroidTestCase test,
+        public void assertReadingContentUriRequiresPermission(AndroidTestCase test,
                                                        Uri uri,
                                                        String permission) {
             // noop.
         }
 
         @Override
-        void assertWritingContentUriRequiresPermission(AndroidTestCase test,
+        public void assertWritingContentUriRequiresPermission(AndroidTestCase test,
                                                        Uri uri,
                                                        String permission) {
             // noop.
