@@ -91,7 +91,6 @@ class AndroidAnnotatedMethodRule implements TestRule {
                 e.fillInStackTrace();
                 exception = e;
             } catch (Throwable e) {
-                e.fillInStackTrace();
                 exception = e;
             } finally {
                 runCount++;
