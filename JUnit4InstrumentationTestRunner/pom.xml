@@ -6,7 +6,7 @@
 	<artifactId>android-junit4</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
@@ -14,6 +14,7 @@
 			<version>4.1.1.4</version>
 			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android-test</artifactId>
@@ -41,19 +42,105 @@
 						<encoding>utf-8</encoding>
 					</configuration>
 				</plugin>
-			</plugins>
+            </plugins>
 		</pluginManagement>
-		<plugins>
+		<plugins>		    
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>
 				<configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+				    <excludes>
+				        <exclude>commons-logging:commons-logging</exclude>
+				        <exclude>org.apache.httpcomponents:httpclient</exclude>
+				        <exclude>org.apache.httpcomponents:httpcore</exclude>
+				        <exclude>commons-codec:commons-codec</exclude>
+				        <exclude>org.khronos:opengl-api</exclude>
+				        <exclude>xerces:xmlParserAPIs</exclude>
+				        <exclude>xpp3:xpp3</exclude>
+                        <exclude>org.json:json</exclude>
+                        <exclude>com.google.android:android</exclude>
+                        <exclude>com.google.android:android-test</exclude>
+                        <exclude>org.hamcrest:hamcrest-core</exclude>
+				    </excludes>
+				    <classpathContainersLast>true</classpathContainersLast>
 					<classpathContainers>
+                        <classpathContainer>com.android.ide.eclipse.adt.ANDROID_FRAMEWORK</classpathContainer>
+                        <classpathContainer>com.android.ide.eclipse.adt.LIBRARIES</classpathContainer>
 						<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
 					</classpathContainers>
+					<additionalBuildcommands>
+                        <buildCommand>
+                            <name>com.android.ide.eclipse.adt.ResourceManagerBuilder</name>
+                            <arguments>
+                            </arguments>
+                        </buildCommand>
+                        <buildCommand>
+                            <name>com.android.ide.eclipse.adt.PreCompilerBuilder</name>
+                            <arguments>
+                            </arguments>
+                        </buildCommand>
+                        <buildCommand>
+                            <name>org.eclipse.jdt.core.javabuilder</name>
+                            <arguments>
+                            </arguments>
+                        </buildCommand>
+                        <buildCommand>
+                            <name>com.android.ide.eclipse.adt.ApkBuilder</name>
+                            <arguments>
+                            </arguments>
+                        </buildCommand>
+                    </additionalBuildcommands>
+                    <projectnatures>
+                        <projectnature>com.android.ide.eclipse.adt.AndroidNature</projectnature>
+                        <projectnature>org.eclipse.jdt.core.javanature</projectnature>
+                    </projectnatures>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/gen</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+               <groupId>com.google.code.maven-replacer-plugin</groupId>
+               <artifactId>replacer</artifactId>
+               <version>1.5.0</version>
+               <executions>
+                   <execution>
+                       <phase>generate-test-sources</phase>
+                       <goals>
+                           <goal>replace</goal>
+                       </goals>
+                   </execution>
+               </executions>
+               <configuration>
+                   <file>.classpath</file>
+                   <ignoreMissingFile>true</ignoreMissingFile>
+                   <replacements>
+                       <replacement>
+                           <token>&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/&gt;</token>
+                           <value>&lt;!--&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/&gt;--&gt;</value>
+                       </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>
