@@ -27,6 +27,7 @@ import android.test.suitebuilder.annotation.Suppress;
 
 import com.android.internal.util.Predicate;
 import com.android.internal.util.Predicates;
+import com.uphyca.testing.InstrumentationSupport;
 import com.uphyca.testing.android.suitebuilder.annotation.JUnit4HasAnnotation;
 
 /**
@@ -37,8 +38,13 @@ import com.uphyca.testing.android.suitebuilder.annotation.JUnit4HasAnnotation;
  */
 public class JUnit4TestPredicates {
 
-    public static final Predicate<Description> SELECT_INSTRUMENTATION =
+    public static final Predicate<Description> SELECT_INSTRUMENTATION_JUNIT3 =
             new JUnit4AssignableFrom(InstrumentationTestCase.class);
+    public static final Predicate<Description> SELECT_INSTRUMENTATION_JUNIT4 =
+            new JUnit4AssignableFrom(InstrumentationSupport.class);
+    @SuppressWarnings("unchecked")
+    public static final Predicate<Description> SELECT_INSTRUMENTATION =
+            Predicates.or(SELECT_INSTRUMENTATION_JUNIT3, SELECT_INSTRUMENTATION_JUNIT4);
     public static final Predicate<Description> REJECT_INSTRUMENTATION =
             Predicates.not(SELECT_INSTRUMENTATION);
 
