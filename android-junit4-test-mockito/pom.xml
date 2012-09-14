@@ -34,13 +34,27 @@
             <version>4.10</version>
         </dependency>
         
-        <!-- 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <artifactId>mockito-core</artifactId>
             <version>1.9.5-rc1</version>
         </dependency>
-        -->
+
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.android.dx</groupId>
+            <artifactId>dexmaker</artifactId>
+            <version>20120622</version>
+	    <scope>system</scope>
+	    <systemPath>${basedir}/libs/dexmaker-20120622.jar</systemPath> 
+        </dependency>
+
+
     </dependencies>
 
 	<build>
@@ -79,7 +93,8 @@
                         <exclude>org.hamcrest:hamcrest-core</exclude>
                         <exclude>junit:junit</exclude>
                         <exclude>com.uphyca:android-junit4</exclude>
-                        <exclude>org.mockito:mockito-all</exclude>
+                        <exclude>org.mockito:mockito-core</exclude>
+                        <exclude>org.objenesis:objenesis</exclude>
 				    </excludes>
 				    <classpathContainersLast>true</classpathContainersLast>
 					<classpathContainers>
@@ -186,16 +201,23 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>libs</outputDirectory>
                                 </artifactItem>
-                                <!-- 
                                 <artifactItem>
                                     <groupId>org.mockito</groupId>
-                                    <artifactId>mockito-all</artifactId>
+                                    <artifactId>mockito-core</artifactId>
                                     <version>1.9.5-rc1</version>
                                     <type>jar</type>
-                                    <overWrite>true</overWrite>
+                                    <overWrite>false</overWrite>
                                     <outputDirectory>libs</outputDirectory>
                                 </artifactItem>
-                                -->
+                                <artifactItem>
+                                    <groupId>org.objenesis</groupId>
+                                    <artifactId>objenesis</artifactId>
+                                    <version>1.2</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>libs</outputDirectory>
+                                </artifactItem>
+
                             </artifactItems>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
