@@ -5,7 +5,24 @@ AndroidJUnit4 is a framework to running JUnit4 tests on Android devices with Ecl
 
 
 Supported API versions;
-    API 3 or later.
+
+    API level 3 (Cupcake) or later.
+
+
+Build instruction;
+
+    1. Install Maven (http://maven.apache.org/)
+    2. Clone repository
+    
+        $ git clone https://github.com/esmasui/AndroidJUnit4.git AndroidJUnit4-readonly
+    
+    3. Build libraries
+        
+        $ cd AndroidJUnit4-readonly
+        $ mvn eclipse:eclipse install
+    
+    4. Import libraries to Eclipse/ADT
+
 
 Usage;
 
@@ -37,7 +54,6 @@ Usage;
 
 Example;
 
--------------
 
     package com.uphyca.testing.test;
 	
@@ -106,7 +122,24 @@ Example;
 	    }
 	
 	}
--------------
+
+
+License;
+
+
+    Copyright (C) 2012 uPhyca Inc.
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+          http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 
 
 
