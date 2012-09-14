@@ -99,14 +99,16 @@ class AndroidAnnotatedMethodRule implements TestRule {
             try {
                 statement.evaluate();
                 exception = null;
-            } catch (InvocationTargetException e) {
-                e.fillInStackTrace();
-                exception = e.getTargetException();
-            } catch (IllegalAccessException e) {
-                e.fillInStackTrace();
-                exception = e;
             } catch (Throwable e) {
-                exception = e;
+                if (e instanceof InvocationTargetException) {
+                    e.fillInStackTrace();
+                    exception = ((InvocationTargetException)e).getTargetException();
+                } else if (e instanceof IllegalAccessException) {
+                    e.fillInStackTrace();
+                    exception = e;
+                } else {
+                    exception = e;
+                }
             } finally {
                 runCount++;
                 // Report current iteration number, if test is repetitive
