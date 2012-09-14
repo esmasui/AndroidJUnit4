@@ -5,10 +5,12 @@ AndroidJUnit4 is a framework to running JUnit4 tests on Android devices with Ecl
 
 
 Supported API versions;
+
     API level 3 (Cupcake) or later.
 
 
 Build instruction;
+
     1. Install Maven (http://maven.apache.org/)
     2. Clone repository
     
