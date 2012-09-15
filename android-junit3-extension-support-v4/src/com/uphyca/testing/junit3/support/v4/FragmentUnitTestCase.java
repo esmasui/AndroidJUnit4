@@ -15,6 +15,8 @@
  */
 package com.uphyca.testing.junit3.support.v4;
 
+import com.uphyca.testing.support.v4.MockFragmentActivity;
+
 import android.app.Activity;
 import android.app.ActivityTrojanHorse;
 import android.app.Application;

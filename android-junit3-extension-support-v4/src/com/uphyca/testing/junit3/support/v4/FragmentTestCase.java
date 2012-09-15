@@ -21,6 +21,8 @@ import java.lang.reflect.Modifier;
 import android.support.v4.app.Fragment;
 import android.test.InstrumentationTestCase;
 
+import com.uphyca.testing.support.v4.FragmentInstrumentation;
+
 /**
  * This is common code used to support Fragment test cases.  For more useful classes, please see
  * {@link com.uphyca.testing.junit3.support.v4.v4.FragmentUnitTestCase} and
