@@ -169,7 +169,9 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     @Override
     protected void tearDown() throws Exception {
 
-        getFragmentInstrumentation().callFragmentOnDestroy();
+        if (mAttached) {
+            getFragmentInstrumentation().callFragmentOnDestroy();
+        }
 
         setFragment(null);
 
