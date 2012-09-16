@@ -23,8 +23,8 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.IBinder;
 
-import com.uphyca.testing.DelegateFactory;
-import com.uphyca.testing.DelegateFactory.DeclaredIn;
+import com.uphyca.testing.support.v4.DelegateFactory;
+import com.uphyca.testing.support.v4.DelegateFactory.DeclaredIn;
 
 public class ActivityTrojanHorse {
 
