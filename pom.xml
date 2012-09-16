@@ -10,6 +10,7 @@
 	<modules>
 		<module>android-junit4</module>
 		<module>android-junit3-extension</module>
+		<module>android-junit3-extension-support-v4</module>
 		<module>android-junit4-extension</module>
 
 		<module>android-junit4-test</module>
