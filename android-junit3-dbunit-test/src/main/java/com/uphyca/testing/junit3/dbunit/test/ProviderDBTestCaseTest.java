@@ -3,7 +3,6 @@ package com.uphyca.testing.junit3.dbunit.test;
 import org.dbunit.Assertion;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.operation.DatabaseOperation;
 
 import android.content.ContentValues;
@@ -48,63 +47,67 @@ public class ProviderDBTestCaseTest extends ProviderDBTestCase<TinyContentProvid
         // Fetch database data after executing your code
         IDataSet databaseDataSet = getConnection().createDataSet();
         ITable actualTable = databaseDataSet.getTable("tiny");
-        ITable filteredTable = DefaultColumnFilter.includedColumnsTable(actualTable,
-                                                                        new String[] { "name" });
+
         // Load expected data from an XML dataset
         IDataSet expectedDataSet = getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_insert);
         ITable expectedTable = expectedDataSet.getTable("tiny");
 
         // Assert actual database table match expected table
         Assertion.assertEquals(expectedTable,
-                               filteredTable);
+                               actualTable);
     }
 
-    public void testDelete() throws Exception{
+    public void testDelete() throws Exception {
 
-        DatabaseOperation.CLEAN_INSERT.execute(getConnection(), getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_insert));
+        DatabaseOperation.CLEAN_INSERT.execute(getConnection(),
+                                               getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_insert));
 
-        IDataSet assertDataSet = getConnection().createDataSet();
-        ITable assertTable = assertDataSet.getTable("tiny");
-        assertEquals(1,  assertTable.getRowCount());
-        
-        getProvider().delete(TinyContentProvider.CONTENT_URI.buildUpon().appendPath("1").build(), null, null);
-        
+        getProvider().delete(TinyContentProvider.CONTENT_URI.buildUpon().appendPath("1").build(),
+                             null,
+                             null);
+
         // Fetch database data after executing your code
         IDataSet databaseDataSet = getConnection().createDataSet();
         ITable actualTable = databaseDataSet.getTable("tiny");
 
-        ITable filteredTable = DefaultColumnFilter.includedColumnsTable(actualTable, new String[] { "name" });
         // Load expected data from an XML dataset
         IDataSet expectedDataSet = getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_empty);
         ITable expectedTable = expectedDataSet.getTable("tiny");
 
         // Assert actual database table match expected table
-        Assertion.assertEquals(expectedTable, filteredTable);
+        Assertion.assertEquals(expectedTable,
+                               actualTable);
     }
-    
-    public void testUpdate() throws Exception{
 
-        DatabaseOperation.CLEAN_INSERT.execute(getConnection(), getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_insert));
+    public void testUpdate() throws Exception {
+
+        DatabaseOperation.CLEAN_INSERT.execute(getConnection(),
+                                               getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_insert));
 
         IDataSet assertDataSet = getConnection().createDataSet();
         ITable assertTable = assertDataSet.getTable("tiny");
-        assertEquals(1,  assertTable.getRowCount());
-        
+        assertEquals(1,
+                     assertTable.getRowCount());
+
         ContentValues values = new ContentValues();
-        values.put("name", "buz");
-        getProvider().update(TinyContentProvider.CONTENT_URI.buildUpon().appendPath("1").build(), values, null, null);
-        
+        values.put("name",
+                   "buz");
+        getProvider().update(TinyContentProvider.CONTENT_URI.buildUpon().appendPath("1").build(),
+                             values,
+                             null,
+                             null);
+
         // Fetch database data after executing your code
         IDataSet databaseDataSet = getConnection().createDataSet();
         ITable actualTable = databaseDataSet.getTable("tiny");
 
-        ITable filteredTable = DefaultColumnFilter.includedColumnsTable(actualTable, new String[] { "name" });
         // Load expected data from an XML dataset
         IDataSet expectedDataSet = getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_update);
         ITable expectedTable = expectedDataSet.getTable("tiny");
 
         // Assert actual database table match expected table
-        Assertion.assertEquals(expectedTable, filteredTable);
+        Assertion.assertEquals(expectedTable,
+                               actualTable);
     }
 
 }

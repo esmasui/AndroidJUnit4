@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import org.dbunit.Assertion;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.filter.DefaultColumnFilter;
 
 import android.content.Context;
 import android.database.DatabaseUtils;
@@ -42,12 +41,12 @@ public class SampleTest extends AndroidDBTestCase {
         // Fetch database data after executing your code
         IDataSet databaseDataSet = getConnection().createDataSet();
         ITable actualTable = databaseDataSet.getTable("sample");
-        ITable filteredTable = DefaultColumnFilter.includedColumnsTable(actualTable, new String[] { "name" });
+        
         // Load expected data from an XML dataset
         IDataSet expectedDataSet = getFlatXmlDataSetFromRawResrouce(R.raw.sample_test);
         ITable expectedTable = expectedDataSet.getTable("sample");
 
         // Assert actual database table match expected table
-        Assertion.assertEquals(expectedTable, filteredTable);
+        Assertion.assertEquals(expectedTable, actualTable);
     }
 }
