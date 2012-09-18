@@ -89,19 +89,13 @@ public abstract class ProviderDBTestCase<T extends ContentProvider> extends Prov
         mDBTestCase = new DBTestCaseDelegate<T>(this);
     }
 
-    private static final String buildConnectionUrl(Context context,
-                                                   String databaseName) {
-        return context.getDatabasePath(databaseName).getAbsolutePath();
-    }
-
     /*
      * (non-Javadoc)
      * 
      * @see org.dbunit.DatabaseTestCase#newDatabaseTester()
      */
     protected IDatabaseTester newDatabaseTester() throws Exception {
-        return new AndroidSQLiteDatabaseTester(buildConnectionUrl(getMockContext(),
-                                                                  getDatabaseName()));
+        return new AndroidSQLiteDatabaseTester(getMockContext(), getDatabaseName());
     }
 
     /*

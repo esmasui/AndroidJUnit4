@@ -85,7 +85,7 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
             return getConnection();
         }
     }
-    
+
     private class MockContext2 extends MockContext {
 
         @Override
@@ -94,10 +94,12 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
         }
 
         @Override
-        public File getDir(String name, int mode) {
+        public File getDir(String name,
+                           int mode) {
             // name the directory so the directory will be separated from
             // one created through the regular Context
-            return getContext().getDir("mockcontext2_" + name, mode);
+            return getContext().getDir("mockcontext2_" + name,
+                                       mode);
         }
 
         @Override
@@ -114,18 +116,13 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
         mDBTestCase = new DBTestCaseDelegate(this);
     }
 
-    private static final String buildConnectionUrl(Context context,
-                                                   String databaseName) {
-        return context.getDatabasePath(databaseName).getAbsolutePath();
-    }
-
     /*
      * (non-Javadoc)
      * 
      * @see org.dbunit.DatabaseTestCase#newDatabaseTester()
      */
     protected IDatabaseTester newDatabaseTester() throws Exception {
-        return new AndroidSQLiteDatabaseTester(buildConnectionUrl(getMockContext(), getDatabaseName()));
+        return new AndroidSQLiteDatabaseTester(getMockContext(), getDatabaseName());
     }
 
     /*
@@ -146,7 +143,6 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
      */
     protected abstract void onCreateDatabase(Context context);
 
-    
     /*
      * (non-Javadoc)
      * 
@@ -191,19 +187,17 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        
+
         mResolver = new MockContentResolver();
         final String filenamePrefix = "test.";
-        RenamingDelegatingContext targetContextWrapper = new
-                RenamingDelegatingContext(
-                new MockContext2(), // The context that most methods are
-                                    //delegated to
+        RenamingDelegatingContext targetContextWrapper = new RenamingDelegatingContext(new MockContext2(), // The context that most methods are
+                                                                                                           //delegated to
                 getContext(), // The context that file methods are delegated to
                 filenamePrefix);
         mDatabaseContext = new IsolatedContext(mResolver, targetContextWrapper);
 
         onCreateDatabase(mDatabaseContext);
-        
+
         mDBTestCase.setUp();
     }
 
@@ -236,27 +230,26 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
 
         //SQLite.JDBC only accepts fetch size 1.
         //@see http://www.dbunit.org/properties.html
-        conn.getConfig().setProperty("http://www.dbunit.org/properties/fetchSize", 1);
-        
+        conn.getConfig().setProperty("http://www.dbunit.org/properties/fetchSize",
+                                     1);
+
         return conn;
     }
 
-    
-//    /**
-//     * Gets the {@link IsolatedContext} created by this class during initialization.
-//     * @return The {@link IsolatedContext} instance
-//     */
-//    public IsolatedContext getMockContext() {
-//        return mDatabaseContext;
-//    }
-    
+    //    /**
+    //     * Gets the {@link IsolatedContext} created by this class during initialization.
+    //     * @return The {@link IsolatedContext} instance
+    //     */
+    //    public IsolatedContext getMockContext() {
+    //        return mDatabaseContext;
+    //    }
+
     protected IDataSet getFlatXmlDataSetFromRawResrouce(int id) throws DataSetException {
-        InputStream in = getContext().getResources()
-                                     .openRawResource(id);
+        InputStream in = getContext().getResources().openRawResource(id);
         FlatXmlProducer producer = new FlatXmlProducer(new InputSource(in), false);
         return new FlatXmlDataSet(producer);
     }
-    
+
     /**
      * Gets the {@link IsolatedContext} created by this class during initialization.
      * @return The {@link IsolatedContext} instance
