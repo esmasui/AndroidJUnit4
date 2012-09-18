@@ -7,6 +7,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.filter.DefaultColumnFilter;
 
+import android.content.Context;
 import android.database.DatabaseUtils;
 
 import com.uphyca.testing.junit3.dbunit.AndroidDBTestCase;
@@ -27,9 +28,12 @@ public class SampleTest extends AndroidDBTestCase {
 
     @Override
     protected void setUp() throws Exception {
-
-        DatabaseUtils.createDbFromSqlStatements(getContext(), "sample.db", 1, CREATE_TABLE_DDL);
         super.setUp();
+    }
+    
+    @Override
+    protected void onCreateDatabase(Context context) {
+        DatabaseUtils.createDbFromSqlStatements(context, getDatabaseName(), 1, CREATE_TABLE_DDL);
     }
 
     public void testPreconditions() throws SQLException,

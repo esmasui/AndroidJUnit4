@@ -1,5 +1,6 @@
 package com.uphyca.testing.junit3.dbunit;
 
+import java.io.File;
 import java.io.InputStream;
 
 import org.dbunit.DBTestCase;
@@ -14,7 +15,13 @@ import org.dbunit.dataset.xml.FlatXmlProducer;
 import org.dbunit.operation.DatabaseOperation;
 import org.xml.sax.InputSource;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.test.AndroidTestCase;
+import android.test.IsolatedContext;
+import android.test.RenamingDelegatingContext;
+import android.test.mock.MockContentResolver;
+import android.test.mock.MockContext;
 
 /**
  * TestCase that uses a AndroidSQLiteDatabaseTester.
@@ -79,10 +86,37 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
         }
     }
     
+    private class MockContext2 extends MockContext {
+
+        @Override
+        public Resources getResources() {
+            return getContext().getResources();
+        }
+
+        @Override
+        public File getDir(String name, int mode) {
+            // name the directory so the directory will be separated from
+            // one created through the regular Context
+            return getContext().getDir("mockcontext2_" + name, mode);
+        }
+
+        @Override
+        public Context getApplicationContext() {
+            return this;
+        }
+    }
+
+    private IsolatedContext mDatabaseContext;
+    private MockContentResolver mResolver;
     private final DBTestCaseDelegate mDBTestCase;
 
     public AndroidDBTestCase() {
         mDBTestCase = new DBTestCaseDelegate(this);
+    }
+
+    private static final String buildConnectionUrl(Context context,
+                                                   String databaseName) {
+        return context.getDatabasePath(databaseName).getAbsolutePath();
     }
 
     /*
@@ -91,7 +125,7 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
      * @see org.dbunit.DatabaseTestCase#newDatabaseTester()
      */
     protected IDatabaseTester newDatabaseTester() throws Exception {
-        return new AndroidSQLiteDatabaseTester(getContext(), getDatabaseName());
+        return new AndroidSQLiteDatabaseTester(buildConnectionUrl(getMockContext(), getDatabaseName()));
     }
 
     /*
@@ -106,6 +140,13 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
      */
     protected abstract String getDatabaseName();
 
+    /**
+     * Implements the code for create database.
+     * @param context
+     */
+    protected abstract void onCreateDatabase(Context context);
+
+    
     /*
      * (non-Javadoc)
      * 
@@ -150,6 +191,19 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        
+        mResolver = new MockContentResolver();
+        final String filenamePrefix = "test.";
+        RenamingDelegatingContext targetContextWrapper = new
+                RenamingDelegatingContext(
+                new MockContext2(), // The context that most methods are
+                                    //delegated to
+                getContext(), // The context that file methods are delegated to
+                filenamePrefix);
+        mDatabaseContext = new IsolatedContext(mResolver, targetContextWrapper);
+
+        onCreateDatabase(mDatabaseContext);
+        
         mDBTestCase.setUp();
     }
 
@@ -203,5 +257,11 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
         return new FlatXmlDataSet(producer);
     }
     
-    
+    /**
+     * Gets the {@link IsolatedContext} created by this class during initialization.
+     * @return The {@link IsolatedContext} instance
+     */
+    public IsolatedContext getMockContext() {
+        return mDatabaseContext;
+    }
 }

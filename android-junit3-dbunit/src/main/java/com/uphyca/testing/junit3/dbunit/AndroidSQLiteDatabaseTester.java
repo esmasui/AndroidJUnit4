@@ -2,8 +2,6 @@ package com.uphyca.testing.junit3.dbunit;
 
 import org.dbunit.JdbcDatabaseTester;
 
-import android.content.Context;
-
 public class AndroidSQLiteDatabaseTester extends JdbcDatabaseTester {
 
     private static final String DRIVER_CLASS = "SQLite.JDBCDriver";
@@ -11,20 +9,14 @@ public class AndroidSQLiteDatabaseTester extends JdbcDatabaseTester {
     private static final String USERNAME = "";
     private static final String PASSWORD = "";
 
-    private static final String buildConnectionUrl(Context context,
-                                                   String databaseName) {
-        return CONNECTION_URL_SCHEMA + context.getDatabasePath(databaseName);
-    }
-
     /**
-     * Creates a new {@link JdbcDatabaseTester} using specific databaseName.
+     * Creates a new {@link JdbcDatabaseTester} using specific databasePath.
      * 
      * @param context
-     * @param databaseName
+     * @param databasePath
      * @throws Exception
      */
-    public AndroidSQLiteDatabaseTester(Context context,
-                                       String databaseName) throws Exception {
-        super(DRIVER_CLASS, buildConnectionUrl(context, databaseName), USERNAME, PASSWORD);
+    public AndroidSQLiteDatabaseTester(String databasePath) throws Exception {
+        super(DRIVER_CLASS, CONNECTION_URL_SCHEMA + databasePath, USERNAME, PASSWORD);
     }
 }
