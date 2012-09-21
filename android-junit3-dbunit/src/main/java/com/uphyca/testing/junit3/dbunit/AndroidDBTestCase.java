@@ -265,6 +265,12 @@ public abstract class AndroidDBTestCase extends AndroidTestCase {
         return new FlatXmlDataSet(producer);
     }
 
+    protected IDataSet getFlatXmlDataSetFromClasspathResrouce(String file) throws DataSetException {
+        InputStream in = getContext().getClassLoader().getResourceAsStream(file);
+        FlatXmlProducer producer = new FlatXmlProducer(new InputSource(in), false);
+        return new FlatXmlDataSet(producer);
+    }
+
     /**
      * Gets the {@link IsolatedContext} created by this class during initialization.
      * @return The {@link IsolatedContext} instance

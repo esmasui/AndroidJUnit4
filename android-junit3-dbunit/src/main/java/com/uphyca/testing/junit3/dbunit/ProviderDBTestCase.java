@@ -229,4 +229,10 @@ public abstract class ProviderDBTestCase<T extends ContentProvider> extends Prov
         FlatXmlProducer producer = new FlatXmlProducer(new InputSource(in), false);
         return new FlatXmlDataSet(producer);
     }
+    
+    protected IDataSet getFlatXmlDataSetFromClasspathResrouce(String file) throws DataSetException {
+        InputStream in = getContext().getClassLoader().getResourceAsStream(file);
+        FlatXmlProducer producer = new FlatXmlProducer(new InputSource(in), false);
+        return new FlatXmlDataSet(producer);
+    }
 }

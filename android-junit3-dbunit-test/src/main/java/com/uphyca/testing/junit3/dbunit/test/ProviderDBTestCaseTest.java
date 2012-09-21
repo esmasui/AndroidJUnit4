@@ -33,7 +33,7 @@ public class ProviderDBTestCaseTest extends ProviderDBTestCase<TinyContentProvid
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_empty);
+        return getFlatXmlDataSetFromClasspathResrouce("provider_db_empty.xml");
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ProviderDBTestCaseTest extends ProviderDBTestCase<TinyContentProvid
         ITable actualTable = databaseDataSet.getTable("tiny");
 
         // Load expected data from an XML dataset
-        IDataSet expectedDataSet = getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_insert);
+        IDataSet expectedDataSet = getFlatXmlDataSetFromClasspathResrouce("provider_db_after_insert.xml");
         ITable expectedTable = expectedDataSet.getTable("tiny");
 
         // Assert actual database table match expected table
@@ -75,7 +75,7 @@ public class ProviderDBTestCaseTest extends ProviderDBTestCase<TinyContentProvid
     public void testDelete() throws Exception {
 
         DatabaseOperation.CLEAN_INSERT.execute(getConnection(),
-                                               getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_insert));
+                                               getFlatXmlDataSetFromClasspathResrouce("provider_db_after_insert.xml"));
 
         getProvider().delete(TinyContentProvider.CONTENT_URI.buildUpon().appendPath("1").build(),
                              null,
@@ -86,7 +86,7 @@ public class ProviderDBTestCaseTest extends ProviderDBTestCase<TinyContentProvid
         ITable actualTable = databaseDataSet.getTable("tiny");
 
         // Load expected data from an XML dataset
-        IDataSet expectedDataSet = getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_empty);
+        IDataSet expectedDataSet = getFlatXmlDataSetFromClasspathResrouce("provider_db_empty.xml");
         ITable expectedTable = expectedDataSet.getTable("tiny");
 
         // Assert actual database table match expected table
@@ -97,7 +97,7 @@ public class ProviderDBTestCaseTest extends ProviderDBTestCase<TinyContentProvid
     public void testUpdate() throws Exception {
 
         DatabaseOperation.CLEAN_INSERT.execute(getConnection(),
-                                               getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_insert));
+                                               getFlatXmlDataSetFromClasspathResrouce("provider_db_after_insert.xml"));
 
         IDataSet assertDataSet = getConnection().createDataSet();
         ITable assertTable = assertDataSet.getTable("tiny");
@@ -117,7 +117,7 @@ public class ProviderDBTestCaseTest extends ProviderDBTestCase<TinyContentProvid
         ITable actualTable = databaseDataSet.getTable("tiny");
 
         // Load expected data from an XML dataset
-        IDataSet expectedDataSet = getFlatXmlDataSetFromRawResrouce(R.raw.provider_db_after_update);
+        IDataSet expectedDataSet = getFlatXmlDataSetFromClasspathResrouce("provider_db_after_update.xml");
         ITable expectedTable = expectedDataSet.getTable("tiny");
 
         // Assert actual database table match expected table

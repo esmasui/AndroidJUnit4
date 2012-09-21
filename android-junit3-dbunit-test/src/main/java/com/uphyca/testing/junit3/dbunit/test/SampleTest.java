@@ -32,7 +32,7 @@ public class SampleTest extends AndroidDBTestCase {
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return getFlatXmlDataSetFromRawResrouce(R.raw.sample_test);
+        return getFlatXmlDataSetFromClasspathResrouce("sample_test.xml");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class SampleTest extends AndroidDBTestCase {
         ITable actualTable = databaseDataSet.getTable("sample");
         
         // Load expected data from an XML dataset
-        IDataSet expectedDataSet = getFlatXmlDataSetFromRawResrouce(R.raw.sample_test);
+        IDataSet expectedDataSet = getFlatXmlDataSetFromClasspathResrouce("sample_test.xml");
         ITable expectedTable = expectedDataSet.getTable("sample");
 
         // Assert actual database table match expected table
