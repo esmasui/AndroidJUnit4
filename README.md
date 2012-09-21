@@ -24,6 +24,10 @@ Build instruction;
     4. Import libraries to Eclipse/ADT
 
 
+Continuous integration;
+    http://jenkins.android-tec.org/job/JUnit4InstrumentationTestRunnerMaven/
+
+
 Usage;
 
     1. Set com.uphyca.testing.JUnit4InstrumentationTestRunner into instrumentation in your AndroidManifest.xml
