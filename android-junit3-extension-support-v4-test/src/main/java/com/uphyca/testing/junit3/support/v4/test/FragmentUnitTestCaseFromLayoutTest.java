@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.uphyca.testing.junit3.support.v4;
+package com.uphyca.testing.junit3.support.v4.test;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.uphyca.testing.junit3.support.v4.FragmentUnitTestCaseFromLayoutTest.MyFragment;
+import com.uphyca.testing.junit3.support.v4.FragmentUnitTestCase;
+import com.uphyca.testing.junit3.support.v4.test.FragmentUnitTestCaseFromLayoutTest.MyFragment;
+
 
 public class FragmentUnitTestCaseFromLayoutTest extends FragmentUnitTestCase<MyFragment> {
 
