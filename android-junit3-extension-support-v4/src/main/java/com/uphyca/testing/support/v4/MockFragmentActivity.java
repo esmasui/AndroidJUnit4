@@ -15,6 +15,7 @@
  */
 package com.uphyca.testing.support.v4;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -59,5 +60,10 @@ public class MockFragmentActivity extends FragmentActivity {
     @Override
     protected void onStop() {
         throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
     }
 }

@@ -185,6 +185,15 @@
                                     <outputDirectory>libs</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
+                                    <groupId>com.uphyca</groupId>
+                                    <artifactId>android-junit3-extension-support-v4</artifactId>
+                                    <version>0.1-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <classifier>sources</classifier>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>lib-sources</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>com.google.android</groupId>
                                     <artifactId>support-v4</artifactId>
                                     <version>r7</version>

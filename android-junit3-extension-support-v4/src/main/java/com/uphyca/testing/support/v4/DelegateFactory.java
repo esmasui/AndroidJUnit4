@@ -310,7 +310,8 @@ public abstract class DelegateFactory {
             for (int j = 0, jnum = annotations.length; j < jnum; ++j) {
                 Annotation annon = annotations[j];
                 Class<?> annonType = annon.annotationType();
-                if (!DeclaredIn.class.equals(annonType))
+                if (!DeclaredIn.class.isAssignableFrom(annonType))
+                //if (!DeclaredIn.class.equals(annonType))
                     continue;
 
                 DeclaredIn t = (DeclaredIn) annon;

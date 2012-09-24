@@ -30,7 +30,7 @@ public class ActivityTrojanHorse {
 
     private static interface IActivity {
         void attach(android.content.Context context,
-                    /*ActivityThread*/@DeclaredIn("android.app.ActivityThread") Object aThread,
+                    /* ActivityThread */@DeclaredIn("android.app.ActivityThread") Object aThread,
                     android.app.Instrumentation instr,
                     android.os.IBinder token,
                     android.app.Application application,
@@ -39,7 +39,10 @@ public class ActivityTrojanHorse {
                     java.lang.CharSequence title,
                     android.app.Activity parent,
                     java.lang.String id,
-                    java.lang.Object lastNonConfigurationInstances,
+                    // pre ICS java.lang.Object
+                    // after ICS
+                    // android/app/Activity.java#NonConfigurationInstances
+                    @DeclaredIn("android.app.Activity$NonConfigurationInstances") java.lang.Object lastNonConfigurationInstances,
                     android.content.res.Configuration config);
     }
 
@@ -53,21 +56,12 @@ public class ActivityTrojanHorse {
                                       CharSequence title,
                                       Activity parent,
                                       String id,
-                                      Object lastNonConfigurationInstance) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        IActivity invoker = DelegateFactory.create(IActivity.class,
-                                                   activity);
-        invoker.attach(context,
-                       null,
-                       instrumentation,
-                       token,
-                       application,
-                       intent,
-                       info,
-                       title,
-                       parent,
-                       id,
-                       lastNonConfigurationInstance,
-                       new Configuration());
+                                      Object lastNonConfigurationInstance) throws InstantiationException,
+                                                                          IllegalAccessException,
+                                                                          IllegalArgumentException,
+                                                                          InvocationTargetException {
+        IActivity invoker = DelegateFactory.create(IActivity.class, activity);
+        invoker.attach(context, null, instrumentation, token, application, intent, info, title, parent, id, lastNonConfigurationInstance, new Configuration());
         return activity;
     }
 

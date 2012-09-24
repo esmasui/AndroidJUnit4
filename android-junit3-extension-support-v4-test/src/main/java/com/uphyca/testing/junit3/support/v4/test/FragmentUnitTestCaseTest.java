@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import com.uphyca.testing.junit3.support.v4.FragmentUnitTestCase;
 import com.uphyca.testing.junit3.support.v4.test.FragmentUnitTestCaseTest.MyFragment;
 
-
 public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
 
     public static final class MyFragment extends Fragment {
@@ -119,6 +118,7 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
 
     @Override
     protected void tearDown() throws Exception {
+
         MyFragment fragment = getFragment();
 
         assertFalse(fragment.onDestroyViewCalled);
@@ -126,33 +126,27 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
         assertFalse(fragment.onDettachCalled);
 
         super.tearDown();
-        
+
         assertTrue(fragment.onDestroyCalled);
         assertTrue(fragment.onDettachCalled);
     }
 
     public void testPreconditions() {
-        startFragment(null,
-                      null,
-                      null);
+        startFragment(null, null, null);
         assertNotNull(getFragment());
     }
 
     public void testOnCreate() {
-        startFragment(null,
-                      null,
-                      null);
+        startFragment(null, null, null);
         assertTrue(getFragment().onAttachCalled);
         assertTrue(getFragment().onCreateCalled);
     }
 
     public void testLifeCycles() {
 
-        //Activate fragment
+        // Activate fragment
 
-        startFragment(null,
-                      null,
-                      null);
+        startFragment(null, null, null);
 
         assertTrue(getFragment().onAttachCalled);
         assertTrue(getFragment().onCreateCalled);
@@ -164,7 +158,7 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
         assertTrue(getFragment().onActivityCreatedCalled);
 
         assertNull(getFragment().getView());
-        
+
         assertFalse(getFragment().onStartCalled);
         getFragmentInstrumentation().callFragmentOnStart();
         assertTrue(getFragment().onStartCalled);
@@ -173,9 +167,9 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
         getFragmentInstrumentation().callFragmentOnResume();
         assertTrue(getFragment().onResumeCalled);
 
-        //Now fragment is active
+        // Now fragment is active
 
-        //Deactivate fragment
+        // Deactivate fragment
 
         assertFalse(getFragment().onPauseCalled);
         getFragmentInstrumentation().callFragmentOnPause();
