@@ -32,7 +32,28 @@ public class AndroidJUnit4TestAdapter extends TestSuite {
 
     private static final String STUB_METHOD_NAME = "testStub";
 
-    public class JUnit4AdapterTestCase extends InstrumentationTestCase {
+    private static final class NullTestCase extends TestCase {
+
+        @Override
+        public void run(TestResult result) {
+            // noop.
+        }
+
+        @Override
+        public String getName() {
+            return STUB_METHOD_NAME;
+        }
+
+        @Override
+        public int countTestCases() {
+            return 1;
+        }
+
+        public void testStub() {
+        }
+    }
+
+    private class JUnit4AdapterTestCase extends InstrumentationTestCase {
 
         private final JUnit4TestAdapter _adapter;
 
@@ -85,6 +106,7 @@ public class AndroidJUnit4TestAdapter extends TestSuite {
         };
     }
 
+    private final Test _nullTest = new NullTestCase();
     private final Class<?> _testClass;
     private final TestCase _theTests;
     private final JUnit4TestAdapter _adapter;
@@ -110,9 +132,7 @@ public class AndroidJUnit4TestAdapter extends TestSuite {
     @Override
     public Test testAt(int index) {
         if (index < (_count - 1)) {
-            Test test = _adapter.getTests()
-                                .get(index);
-            return test;
+            return _nullTest;
         }
         return _theTests;
     }
