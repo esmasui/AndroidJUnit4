@@ -21,7 +21,7 @@ Build instruction;
         $ cd AndroidJUnit4-readonly
         $ mvn eclipse:eclipse install
     
-    4. Import libraries to Eclipse/ADT
+    4. Import AndroidJunit4-readonly/android-junit4 as a Android library project or jar file to your Android test project.
 
 
 Continuous integration;
