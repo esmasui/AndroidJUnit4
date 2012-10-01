@@ -9,6 +9,7 @@
 
 	<modules>
 		<module>android-junit4</module>
+		<module>android-junit4-robolectric</module>
 		<module>android-junit3-extension</module>
 		<module>android-junit3-extension-support-v4</module>
 		<module>android-junit3-dbunit</module>
@@ -16,6 +17,7 @@
 		<module>android-junit4-extension-support-v4</module>
 
 		<module>android-junit4-test</module>
+		<module>android-junit4-robolectric-test</module>
 		<module>android-junit3-extension-support-v4-test</module>
 		<module>android-junit4-test-mockito</module>
 		<module>android-junit3-dbunit-test</module>

@@ -1,0 +1,63 @@
+ALTERING YOUR EXISTING APPLICATION -- WORK IN PROGRESS
+
+
+Before you open IntelliJ:
+
+    - Add the Robolectric (droid-sugar) git submodule to your application. (You'll probably want to fork the droid-sugar
+    repository so you can make changes, and hopefully you'll contribute your improvements back!)
+    In the root of your application run:
+
+     git submodule add git@github.com:pivotal/droid-sugar.git
+
+- Reorganize your project.  From the root of your project:
+
+    mkdir -p code aidls/src
+
+    mv src gen code
+
+        - find all *.aidl under code and move under aidls/src directory. If you don't have any aidl's in your project,
+        you'll probably want to add a dummy text file in the aidls/src directory so that the directories are not auto
+        deleted by IntelliJ.
+
+
+    mkdir -p code/lib/main
+
+        - place your project's production jars in this directory (I.E. roboguice jar)
+
+    mkdir -p code/lib/test
+
+         - place your project's test jars in this directory (I.E. junit jar)
+
+
+- add the following to the build.properties in the root of your project:
+
+        source.dir=code/src
+        test.dir=code/test
+        aidl.dir=aidls/src
+        tmp.dir=tmp
+
+        external.libs.dir=code/lib/main
+
+- Open IntelliJ [this section is not correct/complete]
+
+    Go to Module Setup
+
+    Select Code module -> Dependencies -> Add -> Library -> Global Library... -> Android x.x
+        set the scope to: Complile
+
+    Select Code module -> Dependencies -> Add -> Library -> Module Library -> jar directory -> choose 'code/lib/test'
+        set the scope to: Test
+
+
+    Select (main project module) -> Android facet
+    Select (*) Generate Java files under other source root: [ .../code/gen ]
+
+    Select (main module) -> Dependencies
+    Add -> Module dependency -> Code
+    Add -> Module dependency -> Aidls
+
+    Create new module -> use existing iml with droid-sugar/droid-sugar.iml.
+    Select Code module -> Dependencies
+    Add -> Module dependency -> droid-sugar
+    Change scope from Compile to Test
+
