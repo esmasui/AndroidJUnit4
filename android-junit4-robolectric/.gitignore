@@ -1,0 +1,11 @@
+.classpath
+.project
+.settings/
+
+target/
+
+gen/
+bin/
+libs/
+tmp/
+
