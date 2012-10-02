@@ -1,5 +1,8 @@
 /*
  * Copyright (C) 2012 uPhyca Inc.
+ * 
+ * Base on previous work by
+ * Copyright (C) 2008 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +21,12 @@ package com.uphyca.testing;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
-public abstract class ActivityUnitTestCase<T extends Activity> {
+public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityTestCase {
 
-    private Instrumentation mInstrumentation;
     private Class<T> mActivityClass;
-    private T mActivity;
     private boolean mAttached = false;
     private boolean mCreated = false;
 
@@ -40,11 +40,6 @@ public abstract class ActivityUnitTestCase<T extends Activity> {
 
     protected void tearDown() throws Exception {
         setActivity(null);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void setActivity(Activity testActivity) {
-        mActivity = (T) testActivity;
     }
 
     protected T startActivity(Intent intent,
@@ -72,21 +67,15 @@ public abstract class ActivityUnitTestCase<T extends Activity> {
 
         T result = getActivity();
         if (result != null) {
-            mInstrumentation.callActivityOnCreate(mActivity, savedInstanceState);
+            getInstrumentation().callActivityOnCreate(getActivity(), savedInstanceState);
             mCreated = true;
         }
         return result;
     }
 
-    protected T getActivity() {
-        return mActivity;
-    }
-
-    public Instrumentation getInstrumentation() {
-        return mInstrumentation;
-    }
-
-    public void injectInstrumentation(Instrumentation instrumentation) {
-        mInstrumentation = instrumentation;
+    @SuppressWarnings("unchecked")
+    @Override
+    public T getActivity() {
+        return (T) super.getActivity();
     }
 }
