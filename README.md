@@ -12,16 +12,17 @@ Supported API versions;
 Build instruction;
 
     1. Install Maven (http://maven.apache.org/)
-    2. Clone repository
+    2. Install android-sdks into local m2 repository using https://github.com/mosabua/maven-android-sdk-deployer    
+    3. Clone the repository
     
         $ git clone https://github.com/esmasui/AndroidJUnit4.git AndroidJUnit4-readonly
     
-    3. Build libraries
+    4. Build libraries
         
         $ cd AndroidJUnit4-readonly
         $ mvn eclipse:eclipse install
     
-    4. Import AndroidJunit4-readonly/android-junit4 as a Android library project or jar file to your Android test project.
+    5. Import AndroidJunit4-readonly/android-junit4 as a Android library project or jar file to your Android test project.
 
 
 Continuous integration;
