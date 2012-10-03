@@ -24,6 +24,8 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.After;
 import org.junit.Before;
 
+import com.xtremelabs.robolectric.Robolectric;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
@@ -120,31 +122,35 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
     }
 
     public int getRequestedOrientation() {
-        if (mMockParent != null) {
-            return mMockParent.mRequestedOrientation;
-        }
-        return 0;
+        return Robolectric.shadowOf(getActivity()).getRequestedOrientation();
+//        if (mMockParent != null) {
+//            return mMockParent.mRequestedOrientation;
+//        }
+//        return 0;
     }
 
     public Intent getStartedActivityIntent() {
-        if (mMockParent != null) {
-            return mMockParent.mStartedActivityIntent;
-        }
-        return null;
+        return Robolectric.shadowOf(getActivity()).getNextStartedActivity();
+//        if (mMockParent != null) {
+//            return mMockParent.mStartedActivityIntent;
+//        }
+//        return null;
     }
 
     public int getStartedActivityRequest() {
-        if (mMockParent != null) {
-            return mMockParent.mStartedActivityRequest;
-        }
-        return 0;
+        return Robolectric.shadowOf(getActivity()).getNextStartedActivityForResult().requestCode;
+//        if (mMockParent != null) {
+//            return mMockParent.mStartedActivityRequest;
+//        }
+//        return 0;
     }
 
     public boolean isFinishCalled() {
-        if (mMockParent != null) {
-            return mMockParent.mFinished;
-        }
-        return false;
+        return Robolectric.shadowOf(getActivity()).isFinishing();
+//        if (mMockParent != null) {
+//            return mMockParent.mFinished;
+//        }
+//        return false;
     }
 
     public int getFinishedActivityRequest() {

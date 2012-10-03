@@ -15,8 +15,11 @@
  */
 package com.uphyca.testing;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -25,9 +28,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 
-import com.uphyca.testing.ActivityUnitTestCase;
-import com.uphyca.testing.AndroidTestRunner;
 import com.uphyca.testing.robolectric.TestSpyActivity;
 
 @RunWith(AndroidTestRunner.class)
@@ -97,5 +99,68 @@ public class ActivityUnitTestCaseTest extends ActivityUnitTestCase<TestSpyActivi
         assertFalse(underTest.isOnStopCalled());
         getInstrumentation().callActivityOnStop(underTest);
         assertTrue(underTest.isOnStopCalled());
+    }
+
+    /**
+     * Test test for getStartedActivityIntent();
+     */
+    @Test
+    public void shouldReturnsIntentThatStartActivityCalled() {
+
+        startActivity(_startIntent, null, null);
+
+        assertNull(getStartedActivityIntent());
+
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        getActivity().startActivity(newIntent);
+
+        assertThat(getStartedActivityIntent(), is(newIntent));
+    }
+
+    /**
+     * The test for getStartedActivityRequest()
+     */
+    @Test
+    public void shouldReturnsIntentThatStartActivityForResultCalled() {
+        final int requestCode = 1;
+
+        startActivity(_startIntent, null, null);
+
+        assertNull(getStartedActivityIntent());
+
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+
+        getActivity().startActivityForResult(newIntent, requestCode);
+
+        assertThat(getStartedActivityIntent(), is(newIntent));
+        assertThat(getStartedActivityRequest(), is(requestCode));
+    }
+
+    /**
+     * The test for getRequestOrientation()
+     */
+    @Test
+    public void shouldReturnsOrientationThatSetRequestOrientationCalled() {
+
+        startActivity(_startIntent, null, null);
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        assertThat(getRequestedOrientation(), is(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE));
+    }
+
+    /**
+     * The test for isFinishCalled()
+     */
+    @Test
+    public void shouldReturnsTrueThatFinishCalled() {
+
+        startActivity(_startIntent, null, null);
+
+        assertFalse(isFinishCalled());
+
+        getActivity().finish();
+
+        assertTrue(isFinishCalled());
     }
 }
