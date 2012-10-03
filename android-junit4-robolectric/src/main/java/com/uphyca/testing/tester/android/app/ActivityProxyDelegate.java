@@ -1,4 +1,4 @@
-package com.uphyca.testing.adapter;
+package com.uphyca.testing.tester.android.app;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -66,18 +66,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 
-import com.uphyca.testing.delegate.DelegateFactory;
-import com.uphyca.testing.delegate.IActivity;
+import com.uphyca.testing.DelegateFactory;
+import com.uphyca.testing.proxy.android.app.ActivityProxy;
 
-public class ActivityAdapter implements IActivity {
+public class ActivityProxyDelegate implements ActivityProxy {
 
-    public static final IActivity create(Activity activity){
-        return new ActivityAdapter(activity);
+    public static final ActivityProxy create(Activity activity){
+        return new ActivityProxyDelegate(activity);
     }
     
     private final Activity _activity;
 
-    private ActivityAdapter(Activity activity) {
+    private ActivityProxyDelegate(Activity activity) {
         _activity = activity;
     }
     
@@ -2516,86 +2516,86 @@ public class ActivityAdapter implements IActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onCreate(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onPostCreate(savedInstanceState);
     }
 
     @Override
     public void onStart() {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onStart();
     }
 
     @Override
     public void onRestart() {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onRestart();
     }
 
     @Override
     public void onResume() {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onResume();
     }
 
     @Override
     public void onPostResume() {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onPostResume();
     }
 
     @Override
     public void onNewIntent(Intent intent) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onNewIntent(intent);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onSaveInstanceState(outState);
     }
 
     @Override
     public void onPause() {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onPause();
     }
 
     @Override
     public void onUserLeaveHint() {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onUserLeaveHint();
     }
 
     @Override
     public void onStop() {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onStop();
     }
 
     @Override
     public void onDestroy() {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onDestroy();
     }
 
     @Override
     @Deprecated
     public Dialog onCreateDialog(int id) {
-        return DelegateFactory.create(IActivity.class, _activity)
+        return DelegateFactory.create(ActivityProxy.class, _activity)
                               .onCreateDialog(id);
     }
 
@@ -2603,7 +2603,7 @@ public class ActivityAdapter implements IActivity {
     @Deprecated
     public Dialog onCreateDialog(int id,
                                  Bundle args) {
-        return DelegateFactory.create(IActivity.class, _activity)
+        return DelegateFactory.create(ActivityProxy.class, _activity)
                               .onCreateDialog(id, args);
     }
 
@@ -2611,7 +2611,7 @@ public class ActivityAdapter implements IActivity {
     @Deprecated
     public void onPrepareDialog(int id,
                                 Dialog dialog) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onPrepareDialog(id, dialog);
     }
 
@@ -2620,7 +2620,7 @@ public class ActivityAdapter implements IActivity {
     public void onPrepareDialog(int id,
                                 Dialog dialog,
                                 Bundle args) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onPrepareDialog(id, dialog, args);
     }
 
@@ -2628,7 +2628,7 @@ public class ActivityAdapter implements IActivity {
     public void onApplyThemeResource(Theme theme,
                                      int resid,
                                      boolean first) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onApplyThemeResource(theme, resid, first);
     }
 
@@ -2636,21 +2636,21 @@ public class ActivityAdapter implements IActivity {
     public void onActivityResult(int requestCode,
                                  int resultCode,
                                  Intent data) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onTitleChanged(CharSequence title,
                                int color) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onTitleChanged(title, color);
     }
 
     @Override
     public void onChildTitleChanged(Activity childActivity,
                                     CharSequence title) {
-        DelegateFactory.create(IActivity.class, _activity)
+        DelegateFactory.create(ActivityProxy.class, _activity)
                        .onChildTitleChanged(childActivity, title);
     }
 

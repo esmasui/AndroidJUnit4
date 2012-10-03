@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.uphyca.testing;
+package com.uphyca.testing.app;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
-import com.uphyca.testing.adapter.ActivityAdapter;
-import com.uphyca.testing.delegate.IActivity;
+import com.uphyca.testing.proxy.android.app.ActivityProxy;
+import com.uphyca.testing.tester.android.app.ActivityProxyDelegate;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.ShadowApplication;
 
@@ -45,8 +45,8 @@ public class RobolectricInstrumentation extends Instrumentation {
         }
     }
 
-    private static IActivity delegate(Activity activity) {
-        return ActivityAdapter.create(activity);
+    private static ActivityProxy delegate(Activity activity) {
+        return ActivityProxyDelegate.create(activity);
     }
 
     private Context mAppContext;
@@ -162,7 +162,7 @@ public class RobolectricInstrumentation extends Instrumentation {
      */
     @Override
     public void callActivityOnResume(Activity activity) {
-        IActivity delegate = delegate(activity);
+        ActivityProxy delegate = delegate(activity);
         delegate.setMResumed(true);
         delegate.onResume();
     }

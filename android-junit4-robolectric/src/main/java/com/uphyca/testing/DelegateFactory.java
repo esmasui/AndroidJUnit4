@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.uphyca.testing.delegate;
+package com.uphyca.testing;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;

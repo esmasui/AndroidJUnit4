@@ -15,6 +15,11 @@
  */
 package com.uphyca.testing;
 
+import org.junit.After;
+import org.junit.Before;
+
+import com.uphyca.testing.app.RobolectricInstrumentation;
+
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
@@ -31,30 +36,52 @@ public class InstrumentationTestCase {
         injectInstrumentation(new RobolectricInstrumentation());
     }
 
-    /* (non-Javadoc)
-     * @see android.test.InstrumentationTestCase#injectInstrumentation(android.app.Instrumentation)
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * android.test.InstrumentationTestCase#injectInstrumentation(android.app
+     * .Instrumentation)
      */
     public void injectInstrumentation(Instrumentation instrumentation) {
         mInstrumentation = instrumentation;
     }
 
-    /* (non-Javadoc)
-     * @see android.test.InstrumentationTestCase#injectInsrumentation(android.app.Instrumentation)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * android.test.InstrumentationTestCase#injectInsrumentation(android.app
+     * .Instrumentation)
      */
     @Deprecated
     public void injectInsrumentation(Instrumentation instrumentation) {
         injectInstrumentation(instrumentation);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.test.InstrumentationTestCase#getInstrumentation()
      */
     public Instrumentation getInstrumentation() {
         return mInstrumentation;
     }
 
-    /* (non-Javadoc)
-     * @see android.test.InstrumentationTestCase#launchActivity(java.lang.String, java.lang.Class, android.os.Bundle)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * android.test.InstrumentationTestCase#launchActivity(java.lang.String,
+     * java.lang.Class, android.os.Bundle)
      */
     public final <T extends Activity> T launchActivity(String pkg,
                                                        Class<T> activityCls,
@@ -66,8 +93,12 @@ public class InstrumentationTestCase {
         return launchActivityWithIntent(pkg, activityCls, intent);
     }
 
-    /* (non-Javadoc)
-     * @see android.test.InstrumentationTestCase#launchActivityWithIntent(java.lang.String, java.lang.Class, android.content.Intent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * android.test.InstrumentationTestCase#launchActivityWithIntent(java.lang
+     * .String, java.lang.Class, android.content.Intent)
      */
     @SuppressWarnings("unchecked")
     public final <T extends Activity> T launchActivityWithIntent(String pkg,
@@ -80,8 +111,12 @@ public class InstrumentationTestCase {
         return activity;
     }
 
-    /* (non-Javadoc)
-     * @see android.test.InstrumentationTestCase#runTestOnUiThread(java.lang.Runnable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * android.test.InstrumentationTestCase#runTestOnUiThread(java.lang.Runnable
+     * )
      */
     public void runTestOnUiThread(final Runnable r) throws Throwable {
         final Throwable[] exceptions = new Throwable[1];
@@ -99,7 +134,9 @@ public class InstrumentationTestCase {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.test.InstrumentationTestCase#sendKeys(java.lang.String)
      */
     public void sendKeys(String keysSequence) {
@@ -107,7 +144,9 @@ public class InstrumentationTestCase {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.test.InstrumentationTestCase#sendKeys(int[])
      */
     public void sendKeys(int... keys) {
@@ -115,7 +154,9 @@ public class InstrumentationTestCase {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.test.InstrumentationTestCase#sendRepeatedKeys(int[])
      */
     public void sendRepeatedKeys(int... keys) {

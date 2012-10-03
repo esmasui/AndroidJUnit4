@@ -20,26 +20,42 @@ package com.uphyca.testing;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.After;
+import org.junit.Before;
+
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityTestCase {
 
     private Class<T> mActivityClass;
+
+    private Context mActivityContext;
+    private Application mApplication;
+    // private MockParent mMockParent;
+
     private boolean mAttached = false;
     private boolean mCreated = false;
 
     public ActivityUnitTestCase(Class<T> activityClass) {
         mActivityClass = activityClass;
-        injectInstrumentation(new RobolectricInstrumentation());
     }
 
-    protected void setUp() throws Exception {
+    @SuppressWarnings("unchecked")
+    @Override
+    public T getActivity() {
+        return (T) super.getActivity();
     }
 
-    protected void tearDown() throws Exception {
-        setActivity(null);
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        mActivityContext = getInstrumentation().getTargetContext();
     }
 
     protected T startActivity(Intent intent,
@@ -73,9 +89,11 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T getActivity() {
-        return (T) super.getActivity();
+    @After
+    public void tearDown() throws Exception {
+        setActivity(null);
+        super.tearDown();
     }
+
 }

@@ -1,4 +1,4 @@
-package com.uphyca.testing.delegate;
+package com.uphyca.testing.proxy.android.app;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -41,8 +41,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 
+import com.uphyca.testing.DelegateFactory;
+
 @SuppressLint("NewApi")
-public interface IActivity {
+public interface ActivityProxy {
 
     /*
      * (non-Javadoc)
