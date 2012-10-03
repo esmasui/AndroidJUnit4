@@ -22,15 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Instrumentation;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 
+import com.uphyca.testing.Proxies;
 import com.uphyca.testing.proxy.android.app.ActivityProxy;
-import com.uphyca.testing.tester.android.app.ActivityProxyDelegate;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.shadows.ShadowApplication;
 
@@ -45,8 +48,8 @@ public class RobolectricInstrumentation extends Instrumentation {
         }
     }
 
-    private static ActivityProxy delegate(Activity activity) {
-        return ActivityProxyDelegate.create(activity);
+    private ActivityProxy proxyOf(Activity activity) {
+        return Proxies.proxyOf(activity);
     }
 
     private Context mAppContext;
@@ -59,10 +62,12 @@ public class RobolectricInstrumentation extends Instrumentation {
     }
 
     private final void validateNotAppThread() {
-        //noop.
+        // noop.
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.app.Instrumentation#getTargetContext()
      */
     public Context getTargetContext() {
@@ -79,7 +84,7 @@ public class RobolectricInstrumentation extends Instrumentation {
     @Override
     public void callActivityOnCreate(Activity activity,
                                      Bundle icicle) {
-        delegate(activity).performCreate(icicle);
+        proxyOf(activity).performCreate(icicle);
     }
 
     /*
@@ -90,7 +95,7 @@ public class RobolectricInstrumentation extends Instrumentation {
      */
     @Override
     public void callActivityOnDestroy(Activity activity) {
-        delegate(activity).performDestroy();
+        proxyOf(activity).performDestroy();
     }
 
     /*
@@ -103,7 +108,7 @@ public class RobolectricInstrumentation extends Instrumentation {
     @Override
     public void callActivityOnRestoreInstanceState(Activity activity,
                                                    Bundle savedInstanceState) {
-        delegate(activity).performRestoreInstanceState(savedInstanceState);
+        proxyOf(activity).performRestoreInstanceState(savedInstanceState);
     }
 
     /*
@@ -116,7 +121,7 @@ public class RobolectricInstrumentation extends Instrumentation {
     @Override
     public void callActivityOnPostCreate(Activity activity,
                                          Bundle icicle) {
-        delegate(activity).onPostCreate(icicle);
+        proxyOf(activity).onPostCreate(icicle);
     }
 
     /*
@@ -129,7 +134,7 @@ public class RobolectricInstrumentation extends Instrumentation {
     @Override
     public void callActivityOnNewIntent(Activity activity,
                                         Intent intent) {
-        delegate(activity).onNewIntent(intent);
+        proxyOf(activity).onNewIntent(intent);
     }
 
     /*
@@ -140,7 +145,7 @@ public class RobolectricInstrumentation extends Instrumentation {
      */
     @Override
     public void callActivityOnStart(Activity activity) {
-        delegate(activity).onStart();
+        proxyOf(activity).onStart();
     }
 
     /*
@@ -151,7 +156,7 @@ public class RobolectricInstrumentation extends Instrumentation {
      */
     @Override
     public void callActivityOnRestart(Activity activity) {
-        delegate(activity).onRestart();
+        proxyOf(activity).onRestart();
     }
 
     /*
@@ -162,7 +167,7 @@ public class RobolectricInstrumentation extends Instrumentation {
      */
     @Override
     public void callActivityOnResume(Activity activity) {
-        ActivityProxy delegate = delegate(activity);
+        ActivityProxy delegate = proxyOf(activity);
         delegate.setMResumed(true);
         delegate.onResume();
     }
@@ -174,7 +179,7 @@ public class RobolectricInstrumentation extends Instrumentation {
      */
     @Override
     public void callActivityOnStop(Activity activity) {
-        delegate(activity).onStop();
+        proxyOf(activity).onStop();
     }
 
     /*
@@ -187,7 +192,7 @@ public class RobolectricInstrumentation extends Instrumentation {
     @Override
     public void callActivityOnSaveInstanceState(Activity activity,
                                                 Bundle outState) {
-        delegate(activity).performSaveInstanceState(outState);
+        proxyOf(activity).performSaveInstanceState(outState);
     }
 
     /*
@@ -198,7 +203,7 @@ public class RobolectricInstrumentation extends Instrumentation {
      */
     @Override
     public void callActivityOnPause(Activity activity) {
-        delegate(activity).performPause();
+        proxyOf(activity).performPause();
     }
 
     /*
@@ -210,7 +215,7 @@ public class RobolectricInstrumentation extends Instrumentation {
      */
     @Override
     public void callActivityOnUserLeaving(Activity activity) {
-        delegate(activity).performUserLeaving();
+        proxyOf(activity).performUserLeaving();
     }
 
     @Override
@@ -224,15 +229,16 @@ public class RobolectricInstrumentation extends Instrumentation {
             if (ai == null) {
                 throw new RuntimeException("Unable to resolve activity for: " + intent);
             }
-            //            String myProc = mThread.getProcessName();
-            //            if (!ai.processName.equals(myProc)) {
-            //                // todo: if this intent is ambiguous, look here to see if
-            //                // there is a single match that is in our package.
-            //                throw new RuntimeException("Intent in process " + myProc + " resolved to different process " + ai.processName + ": " + intent);
-            //            }
+            // String myProc = mThread.getProcessName();
+            // if (!ai.processName.equals(myProc)) {
+            // // todo: if this intent is ambiguous, look here to see if
+            // // there is a single match that is in our package.
+            // throw new RuntimeException("Intent in process " + myProc +
+            // " resolved to different process " + ai.processName + ": " +
+            // intent);
+            // }
 
-            intent.setComponent(new ComponentName(ai.applicationInfo.packageName,
-                                                  ai.name));
+            intent.setComponent(new ComponentName(ai.applicationInfo.packageName, ai.name));
             final ActivityWaiter aw = new ActivityWaiter(intent);
 
             if (mWaitingActivities == null) {
@@ -255,12 +261,38 @@ public class RobolectricInstrumentation extends Instrumentation {
 
     @Override
     public void waitForIdleSync() {
-        //noop.
+        // noop.
     }
 
     @Override
     public void runOnMainSync(Runnable runner) {
         validateNotAppThread();
         runner.run();
+    }
+
+    @Override
+    public Activity newActivity(Class<?> clazz,
+                                Context context,
+                                IBinder token,
+                                Application application,
+                                Intent intent,
+                                ActivityInfo info,
+                                CharSequence title,
+                                Activity parent,
+                                String id,
+                                Object lastNonConfigurationInstance) throws InstantiationException,
+                                                                    IllegalAccessException {
+        Activity activity = (Activity) clazz.newInstance();
+        proxyOf(activity).attach(context, null, this, token, application, intent, info, title, parent, id, lastNonConfigurationInstance, new Configuration());
+        return activity;
+    }
+
+    public Activity newActivity(ClassLoader cl,
+                                String className,
+                                Intent intent) throws InstantiationException,
+                                              IllegalAccessException,
+                                              ClassNotFoundException {
+        return (Activity) cl.loadClass(className)
+                            .newInstance();
     }
 }

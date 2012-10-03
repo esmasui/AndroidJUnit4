@@ -42,6 +42,7 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.uphyca.testing.DelegateFactory;
+import com.uphyca.testing.DelegateFactory.DeclaredIn;
 
 @SuppressLint("NewApi")
 public interface ActivityProxy {
@@ -1298,4 +1299,20 @@ public interface ActivityProxy {
 
     void performUserLeaving();
 
+    void attach(android.content.Context context,
+                /* ActivityThread */@DeclaredIn("android.app.ActivityThread") Object aThread,
+                android.app.Instrumentation instr,
+                android.os.IBinder token,
+                android.app.Application application,
+                android.content.Intent intent,
+                android.content.pm.ActivityInfo info,
+                java.lang.CharSequence title,
+                android.app.Activity parent,
+                java.lang.String id,
+                // pre ICS java.lang.Object
+                // after ICS
+                // android/app/Activity.java#NonConfigurationInstances
+                @DeclaredIn("android.app.Activity$NonConfigurationInstances") java.lang.Object lastNonConfigurationInstances,
+                android.content.res.Configuration config);
+    
 }

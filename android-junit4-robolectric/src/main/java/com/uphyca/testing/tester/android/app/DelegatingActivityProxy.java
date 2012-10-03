@@ -15,6 +15,7 @@ import android.app.Application;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.Instrumentation;
 import android.app.LoaderManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -29,6 +30,7 @@ import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -48,6 +50,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.ActionMode;
@@ -67,26 +70,29 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.uphyca.testing.DelegateFactory;
+import com.uphyca.testing.DelegateFactory.DeclaredIn;
 import com.uphyca.testing.proxy.android.app.ActivityProxy;
 
-public class ActivityProxyDelegate implements ActivityProxy {
+public class DelegatingActivityProxy implements ActivityProxy {
 
-    public static final ActivityProxy create(Activity activity){
-        return new ActivityProxyDelegate(activity);
+    public static final ActivityProxy create(Activity activity) {
+        return new DelegatingActivityProxy(activity);
     }
-    
-    private final Activity _activity;
 
-    private ActivityProxyDelegate(Activity activity) {
-        _activity = activity;
+    private final Activity mActivity;
+    private final ActivityProxy mProxy;
+
+    private DelegatingActivityProxy(Activity activity) {
+        mActivity = activity;
+        mProxy = DelegateFactory.create(ActivityProxy.class, mActivity);
     }
-    
+
     /**
      * @param resid
      * @see android.view.ContextThemeWrapper#setTheme(int)
      */
     public void setTheme(int resid) {
-        _activity.setTheme(resid);
+        mActivity.setTheme(resid);
     }
 
     /**
@@ -94,7 +100,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.view.ContextThemeWrapper#getTheme()
      */
     public Theme getTheme() {
-        return _activity.getTheme();
+        return mActivity.getTheme();
     }
 
     /**
@@ -102,7 +108,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getBaseContext()
      */
     public Context getBaseContext() {
-        return _activity.getBaseContext();
+        return mActivity.getBaseContext();
     }
 
     /**
@@ -110,7 +116,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getAssets()
      */
     public AssetManager getAssets() {
-        return _activity.getAssets();
+        return mActivity.getAssets();
     }
 
     /**
@@ -118,7 +124,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getResources()
      */
     public Resources getResources() {
-        return _activity.getResources();
+        return mActivity.getResources();
     }
 
     /**
@@ -126,7 +132,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getPackageManager()
      */
     public PackageManager getPackageManager() {
-        return _activity.getPackageManager();
+        return mActivity.getPackageManager();
     }
 
     /**
@@ -134,7 +140,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getContentResolver()
      */
     public ContentResolver getContentResolver() {
-        return _activity.getContentResolver();
+        return mActivity.getContentResolver();
     }
 
     /**
@@ -142,7 +148,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getMainLooper()
      */
     public Looper getMainLooper() {
-        return _activity.getMainLooper();
+        return mActivity.getMainLooper();
     }
 
     /**
@@ -150,7 +156,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getApplicationContext()
      */
     public Context getApplicationContext() {
-        return _activity.getApplicationContext();
+        return mActivity.getApplicationContext();
     }
 
     /**
@@ -158,7 +164,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getClassLoader()
      */
     public ClassLoader getClassLoader() {
-        return _activity.getClassLoader();
+        return mActivity.getClassLoader();
     }
 
     /**
@@ -166,7 +172,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getPackageName()
      */
     public String getPackageName() {
-        return _activity.getPackageName();
+        return mActivity.getPackageName();
     }
 
     /**
@@ -174,7 +180,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getApplicationInfo()
      */
     public ApplicationInfo getApplicationInfo() {
-        return _activity.getApplicationInfo();
+        return mActivity.getApplicationInfo();
     }
 
     /**
@@ -182,7 +188,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getPackageResourcePath()
      */
     public String getPackageResourcePath() {
-        return _activity.getPackageResourcePath();
+        return mActivity.getPackageResourcePath();
     }
 
     /**
@@ -190,7 +196,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getPackageCodePath()
      */
     public String getPackageCodePath() {
-        return _activity.getPackageCodePath();
+        return mActivity.getPackageCodePath();
     }
 
     /**
@@ -202,7 +208,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public SharedPreferences getSharedPreferences(String name,
                                                   int mode) {
-        return _activity.getSharedPreferences(name, mode);
+        return mActivity.getSharedPreferences(name, mode);
     }
 
     /**
@@ -212,7 +218,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#openFileInput(java.lang.String)
      */
     public FileInputStream openFileInput(String name) throws FileNotFoundException {
-        return _activity.openFileInput(name);
+        return mActivity.openFileInput(name);
     }
 
     /**
@@ -224,7 +230,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public FileOutputStream openFileOutput(String name,
                                            int mode) throws FileNotFoundException {
-        return _activity.openFileOutput(name, mode);
+        return mActivity.openFileOutput(name, mode);
     }
 
     /**
@@ -233,7 +239,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#deleteFile(java.lang.String)
      */
     public boolean deleteFile(String name) {
-        return _activity.deleteFile(name);
+        return mActivity.deleteFile(name);
     }
 
     /**
@@ -242,7 +248,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getFileStreamPath(java.lang.String)
      */
     public File getFileStreamPath(String name) {
-        return _activity.getFileStreamPath(name);
+        return mActivity.getFileStreamPath(name);
     }
 
     /**
@@ -250,7 +256,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#fileList()
      */
     public String[] fileList() {
-        return _activity.fileList();
+        return mActivity.fileList();
     }
 
     /**
@@ -258,7 +264,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getFilesDir()
      */
     public File getFilesDir() {
-        return _activity.getFilesDir();
+        return mActivity.getFilesDir();
     }
 
     /**
@@ -267,7 +273,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getExternalFilesDir(java.lang.String)
      */
     public File getExternalFilesDir(String type) {
-        return _activity.getExternalFilesDir(type);
+        return mActivity.getExternalFilesDir(type);
     }
 
     /**
@@ -275,7 +281,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getObbDir()
      */
     public File getObbDir() {
-        return _activity.getObbDir();
+        return mActivity.getObbDir();
     }
 
     /**
@@ -283,7 +289,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getCacheDir()
      */
     public File getCacheDir() {
-        return _activity.getCacheDir();
+        return mActivity.getCacheDir();
     }
 
     /**
@@ -291,7 +297,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getExternalCacheDir()
      */
     public File getExternalCacheDir() {
-        return _activity.getExternalCacheDir();
+        return mActivity.getExternalCacheDir();
     }
 
     /**
@@ -302,7 +308,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public File getDir(String name,
                        int mode) {
-        return _activity.getDir(name, mode);
+        return mActivity.getDir(name, mode);
     }
 
     /**
@@ -316,7 +322,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public SQLiteDatabase openOrCreateDatabase(String name,
                                                int mode,
                                                CursorFactory factory) {
-        return _activity.openOrCreateDatabase(name, mode, factory);
+        return mActivity.openOrCreateDatabase(name, mode, factory);
     }
 
     /**
@@ -333,7 +339,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                                int mode,
                                                CursorFactory factory,
                                                DatabaseErrorHandler errorHandler) {
-        return _activity.openOrCreateDatabase(name, mode, factory, errorHandler);
+        return mActivity.openOrCreateDatabase(name, mode, factory, errorHandler);
     }
 
     /**
@@ -342,7 +348,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#deleteDatabase(java.lang.String)
      */
     public boolean deleteDatabase(String name) {
-        return _activity.deleteDatabase(name);
+        return mActivity.deleteDatabase(name);
     }
 
     /**
@@ -351,7 +357,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getDatabasePath(java.lang.String)
      */
     public File getDatabasePath(String name) {
-        return _activity.getDatabasePath(name);
+        return mActivity.getDatabasePath(name);
     }
 
     /**
@@ -359,7 +365,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#databaseList()
      */
     public String[] databaseList() {
-        return _activity.databaseList();
+        return mActivity.databaseList();
     }
 
     /**
@@ -367,7 +373,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getWallpaper()
      */
     public Drawable getWallpaper() {
-        return _activity.getWallpaper();
+        return mActivity.getWallpaper();
     }
 
     /**
@@ -375,7 +381,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#peekWallpaper()
      */
     public Drawable peekWallpaper() {
-        return _activity.peekWallpaper();
+        return mActivity.peekWallpaper();
     }
 
     /**
@@ -383,7 +389,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getWallpaperDesiredMinimumWidth()
      */
     public int getWallpaperDesiredMinimumWidth() {
-        return _activity.getWallpaperDesiredMinimumWidth();
+        return mActivity.getWallpaperDesiredMinimumWidth();
     }
 
     /**
@@ -391,7 +397,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#getWallpaperDesiredMinimumHeight()
      */
     public int getWallpaperDesiredMinimumHeight() {
-        return _activity.getWallpaperDesiredMinimumHeight();
+        return mActivity.getWallpaperDesiredMinimumHeight();
     }
 
     /**
@@ -400,7 +406,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#setWallpaper(android.graphics.Bitmap)
      */
     public void setWallpaper(Bitmap bitmap) throws IOException {
-        _activity.setWallpaper(bitmap);
+        mActivity.setWallpaper(bitmap);
     }
 
     /**
@@ -409,7 +415,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#setWallpaper(java.io.InputStream)
      */
     public void setWallpaper(InputStream data) throws IOException {
-        _activity.setWallpaper(data);
+        mActivity.setWallpaper(data);
     }
 
     /**
@@ -418,7 +424,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object o) {
-        return _activity.equals(o);
+        return mActivity.equals(o);
     }
 
     /**
@@ -426,7 +432,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#clearWallpaper()
      */
     public void clearWallpaper() throws IOException {
-        _activity.clearWallpaper();
+        mActivity.clearWallpaper();
     }
 
     /**
@@ -434,7 +440,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#sendBroadcast(android.content.Intent)
      */
     public void sendBroadcast(Intent intent) {
-        _activity.sendBroadcast(intent);
+        mActivity.sendBroadcast(intent);
     }
 
     /**
@@ -445,7 +451,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void sendBroadcast(Intent intent,
                               String receiverPermission) {
-        _activity.sendBroadcast(intent, receiverPermission);
+        mActivity.sendBroadcast(intent, receiverPermission);
     }
 
     /**
@@ -456,7 +462,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void sendOrderedBroadcast(Intent intent,
                                      String receiverPermission) {
-        _activity.sendOrderedBroadcast(intent, receiverPermission);
+        mActivity.sendOrderedBroadcast(intent, receiverPermission);
     }
 
     /**
@@ -478,7 +484,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                      int initialCode,
                                      String initialData,
                                      Bundle initialExtras) {
-        _activity.sendOrderedBroadcast(intent, receiverPermission, resultReceiver, scheduler, initialCode, initialData, initialExtras);
+        mActivity.sendOrderedBroadcast(intent, receiverPermission, resultReceiver, scheduler, initialCode, initialData, initialExtras);
     }
 
     /**
@@ -486,7 +492,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#sendStickyBroadcast(android.content.Intent)
      */
     public void sendStickyBroadcast(Intent intent) {
-        _activity.sendStickyBroadcast(intent);
+        mActivity.sendStickyBroadcast(intent);
     }
 
     /**
@@ -506,7 +512,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                            int initialCode,
                                            String initialData,
                                            Bundle initialExtras) {
-        _activity.sendStickyOrderedBroadcast(intent, resultReceiver, scheduler, initialCode, initialData, initialExtras);
+        mActivity.sendStickyOrderedBroadcast(intent, resultReceiver, scheduler, initialCode, initialData, initialExtras);
     }
 
     /**
@@ -514,7 +520,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#removeStickyBroadcast(android.content.Intent)
      */
     public void removeStickyBroadcast(Intent intent) {
-        _activity.removeStickyBroadcast(intent);
+        mActivity.removeStickyBroadcast(intent);
     }
 
     /**
@@ -526,7 +532,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public Intent registerReceiver(BroadcastReceiver receiver,
                                    IntentFilter filter) {
-        return _activity.registerReceiver(receiver, filter);
+        return mActivity.registerReceiver(receiver, filter);
     }
 
     /**
@@ -542,7 +548,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                    IntentFilter filter,
                                    String broadcastPermission,
                                    Handler scheduler) {
-        return _activity.registerReceiver(receiver, filter, broadcastPermission, scheduler);
+        return mActivity.registerReceiver(receiver, filter, broadcastPermission, scheduler);
     }
 
     /**
@@ -550,7 +556,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#unregisterReceiver(android.content.BroadcastReceiver)
      */
     public void unregisterReceiver(BroadcastReceiver receiver) {
-        _activity.unregisterReceiver(receiver);
+        mActivity.unregisterReceiver(receiver);
     }
 
     /**
@@ -559,7 +565,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#startService(android.content.Intent)
      */
     public ComponentName startService(Intent service) {
-        return _activity.startService(service);
+        return mActivity.startService(service);
     }
 
     /**
@@ -568,7 +574,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#stopService(android.content.Intent)
      */
     public boolean stopService(Intent name) {
-        return _activity.stopService(name);
+        return mActivity.stopService(name);
     }
 
     /**
@@ -582,7 +588,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public boolean bindService(Intent service,
                                ServiceConnection conn,
                                int flags) {
-        return _activity.bindService(service, conn, flags);
+        return mActivity.bindService(service, conn, flags);
     }
 
     /**
@@ -590,7 +596,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
-        return _activity.hashCode();
+        return mActivity.hashCode();
     }
 
     /**
@@ -598,7 +604,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#unbindService(android.content.ServiceConnection)
      */
     public void unbindService(ServiceConnection conn) {
-        _activity.unbindService(conn);
+        mActivity.unbindService(conn);
     }
 
     /**
@@ -612,7 +618,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public boolean startInstrumentation(ComponentName className,
                                         String profileFile,
                                         Bundle arguments) {
-        return _activity.startInstrumentation(className, profileFile, arguments);
+        return mActivity.startInstrumentation(className, profileFile, arguments);
     }
 
     /**
@@ -626,7 +632,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public int checkPermission(String permission,
                                int pid,
                                int uid) {
-        return _activity.checkPermission(permission, pid, uid);
+        return mActivity.checkPermission(permission, pid, uid);
     }
 
     /**
@@ -634,7 +640,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.Context#registerComponentCallbacks(android.content.ComponentCallbacks)
      */
     public void registerComponentCallbacks(ComponentCallbacks callback) {
-        _activity.registerComponentCallbacks(callback);
+        mActivity.registerComponentCallbacks(callback);
     }
 
     /**
@@ -643,7 +649,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#checkCallingPermission(java.lang.String)
      */
     public int checkCallingPermission(String permission) {
-        return _activity.checkCallingPermission(permission);
+        return mActivity.checkCallingPermission(permission);
     }
 
     /**
@@ -652,7 +658,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#checkCallingOrSelfPermission(java.lang.String)
      */
     public int checkCallingOrSelfPermission(String permission) {
-        return _activity.checkCallingOrSelfPermission(permission);
+        return mActivity.checkCallingOrSelfPermission(permission);
     }
 
     /**
@@ -667,7 +673,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                   int pid,
                                   int uid,
                                   String message) {
-        _activity.enforcePermission(permission, pid, uid, message);
+        mActivity.enforcePermission(permission, pid, uid, message);
     }
 
     /**
@@ -678,7 +684,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void enforceCallingPermission(String permission,
                                          String message) {
-        _activity.enforceCallingPermission(permission, message);
+        mActivity.enforceCallingPermission(permission, message);
     }
 
     /**
@@ -689,7 +695,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void enforceCallingOrSelfPermission(String permission,
                                                String message) {
-        _activity.enforceCallingOrSelfPermission(permission, message);
+        mActivity.enforceCallingOrSelfPermission(permission, message);
     }
 
     /**
@@ -697,7 +703,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.Context#unregisterComponentCallbacks(android.content.ComponentCallbacks)
      */
     public void unregisterComponentCallbacks(ComponentCallbacks callback) {
-        _activity.unregisterComponentCallbacks(callback);
+        mActivity.unregisterComponentCallbacks(callback);
     }
 
     /**
@@ -710,7 +716,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public void grantUriPermission(String toPackage,
                                    Uri uri,
                                    int modeFlags) {
-        _activity.grantUriPermission(toPackage, uri, modeFlags);
+        mActivity.grantUriPermission(toPackage, uri, modeFlags);
     }
 
     /**
@@ -719,7 +725,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.Context#getText(int)
      */
     public final CharSequence getText(int resId) {
-        return _activity.getText(resId);
+        return mActivity.getText(resId);
     }
 
     /**
@@ -730,7 +736,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void revokeUriPermission(Uri uri,
                                     int modeFlags) {
-        _activity.revokeUriPermission(uri, modeFlags);
+        mActivity.revokeUriPermission(uri, modeFlags);
     }
 
     /**
@@ -746,7 +752,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                   int pid,
                                   int uid,
                                   int modeFlags) {
-        return _activity.checkUriPermission(uri, pid, uid, modeFlags);
+        return mActivity.checkUriPermission(uri, pid, uid, modeFlags);
     }
 
     /**
@@ -755,7 +761,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.Context#getString(int)
      */
     public final String getString(int resId) {
-        return _activity.getString(resId);
+        return mActivity.getString(resId);
     }
 
     /**
@@ -767,7 +773,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public int checkCallingUriPermission(Uri uri,
                                          int modeFlags) {
-        return _activity.checkCallingUriPermission(uri, modeFlags);
+        return mActivity.checkCallingUriPermission(uri, modeFlags);
     }
 
     /**
@@ -779,7 +785,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public int checkCallingOrSelfUriPermission(Uri uri,
                                                int modeFlags) {
-        return _activity.checkCallingOrSelfUriPermission(uri, modeFlags);
+        return mActivity.checkCallingOrSelfUriPermission(uri, modeFlags);
     }
 
     /**
@@ -790,7 +796,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final String getString(int resId,
                                   Object... formatArgs) {
-        return _activity.getString(resId, formatArgs);
+        return mActivity.getString(resId, formatArgs);
     }
 
     /**
@@ -810,7 +816,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                   int pid,
                                   int uid,
                                   int modeFlags) {
-        return _activity.checkUriPermission(uri, readPermission, writePermission, pid, uid, modeFlags);
+        return mActivity.checkUriPermission(uri, readPermission, writePermission, pid, uid, modeFlags);
     }
 
     /**
@@ -827,7 +833,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                      int uid,
                                      int modeFlags,
                                      String message) {
-        _activity.enforceUriPermission(uri, pid, uid, modeFlags, message);
+        mActivity.enforceUriPermission(uri, pid, uid, modeFlags, message);
     }
 
     /**
@@ -840,7 +846,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public void enforceCallingUriPermission(Uri uri,
                                             int modeFlags,
                                             String message) {
-        _activity.enforceCallingUriPermission(uri, modeFlags, message);
+        mActivity.enforceCallingUriPermission(uri, modeFlags, message);
     }
 
     /**
@@ -853,7 +859,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public void enforceCallingOrSelfUriPermission(Uri uri,
                                                   int modeFlags,
                                                   String message) {
-        _activity.enforceCallingOrSelfUriPermission(uri, modeFlags, message);
+        mActivity.enforceCallingOrSelfUriPermission(uri, modeFlags, message);
     }
 
     /**
@@ -861,7 +867,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return _activity.toString();
+        return mActivity.toString();
     }
 
     /**
@@ -882,7 +888,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                      int uid,
                                      int modeFlags,
                                      String message) {
-        _activity.enforceUriPermission(uri, readPermission, writePermission, pid, uid, modeFlags, message);
+        mActivity.enforceUriPermission(uri, readPermission, writePermission, pid, uid, modeFlags, message);
     }
 
     /**
@@ -891,7 +897,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.Context#obtainStyledAttributes(int[])
      */
     public final TypedArray obtainStyledAttributes(int[] attrs) {
-        return _activity.obtainStyledAttributes(attrs);
+        return mActivity.obtainStyledAttributes(attrs);
     }
 
     /**
@@ -904,7 +910,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public Context createPackageContext(String packageName,
                                         int flags) throws NameNotFoundException {
-        return _activity.createPackageContext(packageName, flags);
+        return mActivity.createPackageContext(packageName, flags);
     }
 
     /**
@@ -912,7 +918,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.content.ContextWrapper#isRestricted()
      */
     public boolean isRestricted() {
-        return _activity.isRestricted();
+        return mActivity.isRestricted();
     }
 
     /**
@@ -924,7 +930,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final TypedArray obtainStyledAttributes(int resid,
                                                    int[] attrs) throws NotFoundException {
-        return _activity.obtainStyledAttributes(resid, attrs);
+        return mActivity.obtainStyledAttributes(resid, attrs);
     }
 
     /**
@@ -936,7 +942,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final TypedArray obtainStyledAttributes(AttributeSet set,
                                                    int[] attrs) {
-        return _activity.obtainStyledAttributes(set, attrs);
+        return mActivity.obtainStyledAttributes(set, attrs);
     }
 
     /**
@@ -952,7 +958,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                                    int[] attrs,
                                                    int defStyleAttr,
                                                    int defStyleRes) {
-        return _activity.obtainStyledAttributes(set, attrs, defStyleAttr, defStyleRes);
+        return mActivity.obtainStyledAttributes(set, attrs, defStyleAttr, defStyleRes);
     }
 
     /**
@@ -960,7 +966,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getIntent()
      */
     public Intent getIntent() {
-        return _activity.getIntent();
+        return mActivity.getIntent();
     }
 
     /**
@@ -968,7 +974,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setIntent(android.content.Intent)
      */
     public void setIntent(Intent newIntent) {
-        _activity.setIntent(newIntent);
+        mActivity.setIntent(newIntent);
     }
 
     /**
@@ -976,7 +982,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getApplication()
      */
     public final Application getApplication() {
-        return _activity.getApplication();
+        return mActivity.getApplication();
     }
 
     /**
@@ -984,7 +990,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#isChild()
      */
     public final boolean isChild() {
-        return _activity.isChild();
+        return mActivity.isChild();
     }
 
     /**
@@ -992,7 +998,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getParent()
      */
     public final Activity getParent() {
-        return _activity.getParent();
+        return mActivity.getParent();
     }
 
     /**
@@ -1000,7 +1006,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getWindowManager()
      */
     public WindowManager getWindowManager() {
-        return _activity.getWindowManager();
+        return mActivity.getWindowManager();
     }
 
     /**
@@ -1008,7 +1014,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getWindow()
      */
     public Window getWindow() {
-        return _activity.getWindow();
+        return mActivity.getWindow();
     }
 
     /**
@@ -1016,7 +1022,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getLoaderManager()
      */
     public LoaderManager getLoaderManager() {
-        return _activity.getLoaderManager();
+        return mActivity.getLoaderManager();
     }
 
     /**
@@ -1024,7 +1030,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getCurrentFocus()
      */
     public View getCurrentFocus() {
-        return _activity.getCurrentFocus();
+        return mActivity.getCurrentFocus();
     }
 
     /**
@@ -1036,7 +1042,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean onCreateThumbnail(Bitmap outBitmap,
                                      Canvas canvas) {
-        return _activity.onCreateThumbnail(outBitmap, canvas);
+        return mActivity.onCreateThumbnail(outBitmap, canvas);
     }
 
     /**
@@ -1044,7 +1050,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onCreateDescription()
      */
     public CharSequence onCreateDescription() {
-        return _activity.onCreateDescription();
+        return mActivity.onCreateDescription();
     }
 
     /**
@@ -1052,7 +1058,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onConfigurationChanged(android.content.res.Configuration)
      */
     public void onConfigurationChanged(Configuration newConfig) {
-        _activity.onConfigurationChanged(newConfig);
+        mActivity.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -1060,7 +1066,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getChangingConfigurations()
      */
     public int getChangingConfigurations() {
-        return _activity.getChangingConfigurations();
+        return mActivity.getChangingConfigurations();
     }
 
     /**
@@ -1069,7 +1075,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getLastNonConfigurationInstance()
      */
     public Object getLastNonConfigurationInstance() {
-        return _activity.getLastNonConfigurationInstance();
+        return mActivity.getLastNonConfigurationInstance();
     }
 
     /**
@@ -1078,7 +1084,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onRetainNonConfigurationInstance()
      */
     public Object onRetainNonConfigurationInstance() {
-        return _activity.onRetainNonConfigurationInstance();
+        return mActivity.onRetainNonConfigurationInstance();
     }
 
     /**
@@ -1086,7 +1092,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onLowMemory()
      */
     public void onLowMemory() {
-        _activity.onLowMemory();
+        mActivity.onLowMemory();
     }
 
     /**
@@ -1094,7 +1100,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onTrimMemory(int)
      */
     public void onTrimMemory(int level) {
-        _activity.onTrimMemory(level);
+        mActivity.onTrimMemory(level);
     }
 
     /**
@@ -1102,7 +1108,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getFragmentManager()
      */
     public FragmentManager getFragmentManager() {
-        return _activity.getFragmentManager();
+        return mActivity.getFragmentManager();
     }
 
     /**
@@ -1110,7 +1116,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onAttachFragment(android.app.Fragment)
      */
     public void onAttachFragment(Fragment fragment) {
-        _activity.onAttachFragment(fragment);
+        mActivity.onAttachFragment(fragment);
     }
 
     /**
@@ -1130,7 +1136,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                      String selection,
                                      String[] selectionArgs,
                                      String sortOrder) {
-        return _activity.managedQuery(uri, projection, selection, selectionArgs, sortOrder);
+        return mActivity.managedQuery(uri, projection, selection, selectionArgs, sortOrder);
     }
 
     /**
@@ -1139,7 +1145,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#startManagingCursor(android.database.Cursor)
      */
     public void startManagingCursor(Cursor c) {
-        _activity.startManagingCursor(c);
+        mActivity.startManagingCursor(c);
     }
 
     /**
@@ -1148,7 +1154,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#stopManagingCursor(android.database.Cursor)
      */
     public void stopManagingCursor(Cursor c) {
-        _activity.stopManagingCursor(c);
+        mActivity.stopManagingCursor(c);
     }
 
     /**
@@ -1157,7 +1163,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#findViewById(int)
      */
     public View findViewById(int id) {
-        return _activity.findViewById(id);
+        return mActivity.findViewById(id);
     }
 
     /**
@@ -1165,7 +1171,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getActionBar()
      */
     public ActionBar getActionBar() {
-        return _activity.getActionBar();
+        return mActivity.getActionBar();
     }
 
     /**
@@ -1173,7 +1179,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setContentView(int)
      */
     public void setContentView(int layoutResID) {
-        _activity.setContentView(layoutResID);
+        mActivity.setContentView(layoutResID);
     }
 
     /**
@@ -1181,7 +1187,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setContentView(android.view.View)
      */
     public void setContentView(View view) {
-        _activity.setContentView(view);
+        mActivity.setContentView(view);
     }
 
     /**
@@ -1192,7 +1198,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void setContentView(View view,
                                LayoutParams params) {
-        _activity.setContentView(view, params);
+        mActivity.setContentView(view, params);
     }
 
     /**
@@ -1203,7 +1209,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void addContentView(View view,
                                LayoutParams params) {
-        _activity.addContentView(view, params);
+        mActivity.addContentView(view, params);
     }
 
     /**
@@ -1211,7 +1217,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setFinishOnTouchOutside(boolean)
      */
     public void setFinishOnTouchOutside(boolean finish) {
-        _activity.setFinishOnTouchOutside(finish);
+        mActivity.setFinishOnTouchOutside(finish);
     }
 
     /**
@@ -1219,7 +1225,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setDefaultKeyMode(int)
      */
     public final void setDefaultKeyMode(int mode) {
-        _activity.setDefaultKeyMode(mode);
+        mActivity.setDefaultKeyMode(mode);
     }
 
     /**
@@ -1230,7 +1236,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean onKeyDown(int keyCode,
                              KeyEvent event) {
-        return _activity.onKeyDown(keyCode, event);
+        return mActivity.onKeyDown(keyCode, event);
     }
 
     /**
@@ -1241,7 +1247,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean onKeyLongPress(int keyCode,
                                   KeyEvent event) {
-        return _activity.onKeyLongPress(keyCode, event);
+        return mActivity.onKeyLongPress(keyCode, event);
     }
 
     /**
@@ -1252,7 +1258,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean onKeyUp(int keyCode,
                            KeyEvent event) {
-        return _activity.onKeyUp(keyCode, event);
+        return mActivity.onKeyUp(keyCode, event);
     }
 
     /**
@@ -1265,7 +1271,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public boolean onKeyMultiple(int keyCode,
                                  int repeatCount,
                                  KeyEvent event) {
-        return _activity.onKeyMultiple(keyCode, repeatCount, event);
+        return mActivity.onKeyMultiple(keyCode, repeatCount, event);
     }
 
     /**
@@ -1273,7 +1279,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onBackPressed()
      */
     public void onBackPressed() {
-        _activity.onBackPressed();
+        mActivity.onBackPressed();
     }
 
     /**
@@ -1284,7 +1290,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean onKeyShortcut(int keyCode,
                                  KeyEvent event) {
-        return _activity.onKeyShortcut(keyCode, event);
+        return mActivity.onKeyShortcut(keyCode, event);
     }
 
     /**
@@ -1293,7 +1299,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onTouchEvent(android.view.MotionEvent)
      */
     public boolean onTouchEvent(MotionEvent event) {
-        return _activity.onTouchEvent(event);
+        return mActivity.onTouchEvent(event);
     }
 
     /**
@@ -1302,7 +1308,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onTrackballEvent(android.view.MotionEvent)
      */
     public boolean onTrackballEvent(MotionEvent event) {
-        return _activity.onTrackballEvent(event);
+        return mActivity.onTrackballEvent(event);
     }
 
     /**
@@ -1311,7 +1317,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onGenericMotionEvent(android.view.MotionEvent)
      */
     public boolean onGenericMotionEvent(MotionEvent event) {
-        return _activity.onGenericMotionEvent(event);
+        return mActivity.onGenericMotionEvent(event);
     }
 
     /**
@@ -1319,7 +1325,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onUserInteraction()
      */
     public void onUserInteraction() {
-        _activity.onUserInteraction();
+        mActivity.onUserInteraction();
     }
 
     /**
@@ -1327,7 +1333,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onWindowAttributesChanged(android.view.WindowManager.LayoutParams)
      */
     public void onWindowAttributesChanged(android.view.WindowManager.LayoutParams params) {
-        _activity.onWindowAttributesChanged(params);
+        mActivity.onWindowAttributesChanged(params);
     }
 
     /**
@@ -1335,7 +1341,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onContentChanged()
      */
     public void onContentChanged() {
-        _activity.onContentChanged();
+        mActivity.onContentChanged();
     }
 
     /**
@@ -1343,7 +1349,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onWindowFocusChanged(boolean)
      */
     public void onWindowFocusChanged(boolean hasFocus) {
-        _activity.onWindowFocusChanged(hasFocus);
+        mActivity.onWindowFocusChanged(hasFocus);
     }
 
     /**
@@ -1351,7 +1357,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onAttachedToWindow()
      */
     public void onAttachedToWindow() {
-        _activity.onAttachedToWindow();
+        mActivity.onAttachedToWindow();
     }
 
     /**
@@ -1359,7 +1365,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onDetachedFromWindow()
      */
     public void onDetachedFromWindow() {
-        _activity.onDetachedFromWindow();
+        mActivity.onDetachedFromWindow();
     }
 
     /**
@@ -1367,7 +1373,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#hasWindowFocus()
      */
     public boolean hasWindowFocus() {
-        return _activity.hasWindowFocus();
+        return mActivity.hasWindowFocus();
     }
 
     /**
@@ -1376,7 +1382,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#dispatchKeyEvent(android.view.KeyEvent)
      */
     public boolean dispatchKeyEvent(KeyEvent event) {
-        return _activity.dispatchKeyEvent(event);
+        return mActivity.dispatchKeyEvent(event);
     }
 
     /**
@@ -1385,7 +1391,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#dispatchKeyShortcutEvent(android.view.KeyEvent)
      */
     public boolean dispatchKeyShortcutEvent(KeyEvent event) {
-        return _activity.dispatchKeyShortcutEvent(event);
+        return mActivity.dispatchKeyShortcutEvent(event);
     }
 
     /**
@@ -1394,7 +1400,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#dispatchTouchEvent(android.view.MotionEvent)
      */
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        return _activity.dispatchTouchEvent(ev);
+        return mActivity.dispatchTouchEvent(ev);
     }
 
     /**
@@ -1403,7 +1409,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#dispatchTrackballEvent(android.view.MotionEvent)
      */
     public boolean dispatchTrackballEvent(MotionEvent ev) {
-        return _activity.dispatchTrackballEvent(ev);
+        return mActivity.dispatchTrackballEvent(ev);
     }
 
     /**
@@ -1412,7 +1418,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#dispatchGenericMotionEvent(android.view.MotionEvent)
      */
     public boolean dispatchGenericMotionEvent(MotionEvent ev) {
-        return _activity.dispatchGenericMotionEvent(ev);
+        return mActivity.dispatchGenericMotionEvent(ev);
     }
 
     /**
@@ -1421,7 +1427,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#dispatchPopulateAccessibilityEvent(android.view.accessibility.AccessibilityEvent)
      */
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
-        return _activity.dispatchPopulateAccessibilityEvent(event);
+        return mActivity.dispatchPopulateAccessibilityEvent(event);
     }
 
     /**
@@ -1430,7 +1436,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onCreatePanelView(int)
      */
     public View onCreatePanelView(int featureId) {
-        return _activity.onCreatePanelView(featureId);
+        return mActivity.onCreatePanelView(featureId);
     }
 
     /**
@@ -1441,7 +1447,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean onCreatePanelMenu(int featureId,
                                      Menu menu) {
-        return _activity.onCreatePanelMenu(featureId, menu);
+        return mActivity.onCreatePanelMenu(featureId, menu);
     }
 
     /**
@@ -1455,7 +1461,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public boolean onPreparePanel(int featureId,
                                   View view,
                                   Menu menu) {
-        return _activity.onPreparePanel(featureId, view, menu);
+        return mActivity.onPreparePanel(featureId, view, menu);
     }
 
     /**
@@ -1466,7 +1472,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean onMenuOpened(int featureId,
                                 Menu menu) {
-        return _activity.onMenuOpened(featureId, menu);
+        return mActivity.onMenuOpened(featureId, menu);
     }
 
     /**
@@ -1477,7 +1483,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean onMenuItemSelected(int featureId,
                                       MenuItem item) {
-        return _activity.onMenuItemSelected(featureId, item);
+        return mActivity.onMenuItemSelected(featureId, item);
     }
 
     /**
@@ -1487,7 +1493,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void onPanelClosed(int featureId,
                               Menu menu) {
-        _activity.onPanelClosed(featureId, menu);
+        mActivity.onPanelClosed(featureId, menu);
     }
 
     /**
@@ -1495,7 +1501,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#invalidateOptionsMenu()
      */
     public void invalidateOptionsMenu() {
-        _activity.invalidateOptionsMenu();
+        mActivity.invalidateOptionsMenu();
     }
 
     /**
@@ -1504,7 +1510,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
      */
     public boolean onCreateOptionsMenu(Menu menu) {
-        return _activity.onCreateOptionsMenu(menu);
+        return mActivity.onCreateOptionsMenu(menu);
     }
 
     /**
@@ -1513,7 +1519,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onPrepareOptionsMenu(android.view.Menu)
      */
     public boolean onPrepareOptionsMenu(Menu menu) {
-        return _activity.onPrepareOptionsMenu(menu);
+        return mActivity.onPrepareOptionsMenu(menu);
     }
 
     /**
@@ -1522,7 +1528,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
      */
     public boolean onOptionsItemSelected(MenuItem item) {
-        return _activity.onOptionsItemSelected(item);
+        return mActivity.onOptionsItemSelected(item);
     }
 
     /**
@@ -1530,7 +1536,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onNavigateUp()
      */
     public boolean onNavigateUp() {
-        return _activity.onNavigateUp();
+        return mActivity.onNavigateUp();
     }
 
     /**
@@ -1539,7 +1545,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onNavigateUpFromChild(android.app.Activity)
      */
     public boolean onNavigateUpFromChild(Activity child) {
-        return _activity.onNavigateUpFromChild(child);
+        return mActivity.onNavigateUpFromChild(child);
     }
 
     /**
@@ -1547,7 +1553,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onCreateNavigateUpTaskStack(android.app.TaskStackBuilder)
      */
     public void onCreateNavigateUpTaskStack(TaskStackBuilder builder) {
-        _activity.onCreateNavigateUpTaskStack(builder);
+        mActivity.onCreateNavigateUpTaskStack(builder);
     }
 
     /**
@@ -1555,7 +1561,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onPrepareNavigateUpTaskStack(android.app.TaskStackBuilder)
      */
     public void onPrepareNavigateUpTaskStack(TaskStackBuilder builder) {
-        _activity.onPrepareNavigateUpTaskStack(builder);
+        mActivity.onPrepareNavigateUpTaskStack(builder);
     }
 
     /**
@@ -1563,7 +1569,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onOptionsMenuClosed(android.view.Menu)
      */
     public void onOptionsMenuClosed(Menu menu) {
-        _activity.onOptionsMenuClosed(menu);
+        mActivity.onOptionsMenuClosed(menu);
     }
 
     /**
@@ -1571,7 +1577,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#openOptionsMenu()
      */
     public void openOptionsMenu() {
-        _activity.openOptionsMenu();
+        mActivity.openOptionsMenu();
     }
 
     /**
@@ -1579,7 +1585,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#closeOptionsMenu()
      */
     public void closeOptionsMenu() {
-        _activity.closeOptionsMenu();
+        mActivity.closeOptionsMenu();
     }
 
     /**
@@ -1592,7 +1598,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public void onCreateContextMenu(ContextMenu menu,
                                     View v,
                                     ContextMenuInfo menuInfo) {
-        _activity.onCreateContextMenu(menu, v, menuInfo);
+        mActivity.onCreateContextMenu(menu, v, menuInfo);
     }
 
     /**
@@ -1600,7 +1606,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#registerForContextMenu(android.view.View)
      */
     public void registerForContextMenu(View view) {
-        _activity.registerForContextMenu(view);
+        mActivity.registerForContextMenu(view);
     }
 
     /**
@@ -1608,7 +1614,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#unregisterForContextMenu(android.view.View)
      */
     public void unregisterForContextMenu(View view) {
-        _activity.unregisterForContextMenu(view);
+        mActivity.unregisterForContextMenu(view);
     }
 
     /**
@@ -1616,7 +1622,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#openContextMenu(android.view.View)
      */
     public void openContextMenu(View view) {
-        _activity.openContextMenu(view);
+        mActivity.openContextMenu(view);
     }
 
     /**
@@ -1624,7 +1630,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#closeContextMenu()
      */
     public void closeContextMenu() {
-        _activity.closeContextMenu();
+        mActivity.closeContextMenu();
     }
 
     /**
@@ -1633,7 +1639,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
      */
     public boolean onContextItemSelected(MenuItem item) {
-        return _activity.onContextItemSelected(item);
+        return mActivity.onContextItemSelected(item);
     }
 
     /**
@@ -1641,7 +1647,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onContextMenuClosed(android.view.Menu)
      */
     public void onContextMenuClosed(Menu menu) {
-        _activity.onContextMenuClosed(menu);
+        mActivity.onContextMenuClosed(menu);
     }
 
     /**
@@ -1650,7 +1656,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#showDialog(int)
      */
     public final void showDialog(int id) {
-        _activity.showDialog(id);
+        mActivity.showDialog(id);
     }
 
     /**
@@ -1662,7 +1668,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final boolean showDialog(int id,
                                     Bundle args) {
-        return _activity.showDialog(id, args);
+        return mActivity.showDialog(id, args);
     }
 
     /**
@@ -1671,7 +1677,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#dismissDialog(int)
      */
     public final void dismissDialog(int id) {
-        _activity.dismissDialog(id);
+        mActivity.dismissDialog(id);
     }
 
     /**
@@ -1680,7 +1686,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#removeDialog(int)
      */
     public final void removeDialog(int id) {
-        _activity.removeDialog(id);
+        mActivity.removeDialog(id);
     }
 
     /**
@@ -1688,7 +1694,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onSearchRequested()
      */
     public boolean onSearchRequested() {
-        return _activity.onSearchRequested();
+        return mActivity.onSearchRequested();
     }
 
     /**
@@ -1703,7 +1709,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                             boolean selectInitialQuery,
                             Bundle appSearchData,
                             boolean globalSearch) {
-        _activity.startSearch(initialQuery, selectInitialQuery, appSearchData, globalSearch);
+        mActivity.startSearch(initialQuery, selectInitialQuery, appSearchData, globalSearch);
     }
 
     /**
@@ -1714,7 +1720,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void triggerSearch(String query,
                               Bundle appSearchData) {
-        _activity.triggerSearch(query, appSearchData);
+        mActivity.triggerSearch(query, appSearchData);
     }
 
     /**
@@ -1722,7 +1728,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#takeKeyEvents(boolean)
      */
     public void takeKeyEvents(boolean get) {
-        _activity.takeKeyEvents(get);
+        mActivity.takeKeyEvents(get);
     }
 
     /**
@@ -1731,7 +1737,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#requestWindowFeature(int)
      */
     public final boolean requestWindowFeature(int featureId) {
-        return _activity.requestWindowFeature(featureId);
+        return mActivity.requestWindowFeature(featureId);
     }
 
     /**
@@ -1741,7 +1747,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final void setFeatureDrawableResource(int featureId,
                                                  int resId) {
-        _activity.setFeatureDrawableResource(featureId, resId);
+        mActivity.setFeatureDrawableResource(featureId, resId);
     }
 
     /**
@@ -1751,7 +1757,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final void setFeatureDrawableUri(int featureId,
                                             Uri uri) {
-        _activity.setFeatureDrawableUri(featureId, uri);
+        mActivity.setFeatureDrawableUri(featureId, uri);
     }
 
     /**
@@ -1762,7 +1768,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final void setFeatureDrawable(int featureId,
                                          Drawable drawable) {
-        _activity.setFeatureDrawable(featureId, drawable);
+        mActivity.setFeatureDrawable(featureId, drawable);
     }
 
     /**
@@ -1772,7 +1778,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final void setFeatureDrawableAlpha(int featureId,
                                               int alpha) {
-        _activity.setFeatureDrawableAlpha(featureId, alpha);
+        mActivity.setFeatureDrawableAlpha(featureId, alpha);
     }
 
     /**
@@ -1780,7 +1786,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getLayoutInflater()
      */
     public LayoutInflater getLayoutInflater() {
-        return _activity.getLayoutInflater();
+        return mActivity.getLayoutInflater();
     }
 
     /**
@@ -1788,7 +1794,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getMenuInflater()
      */
     public MenuInflater getMenuInflater() {
-        return _activity.getMenuInflater();
+        return mActivity.getMenuInflater();
     }
 
     /**
@@ -1799,7 +1805,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void startActivityForResult(Intent intent,
                                        int requestCode) {
-        _activity.startActivityForResult(intent, requestCode);
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     /**
@@ -1812,7 +1818,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public void startActivityForResult(Intent intent,
                                        int requestCode,
                                        Bundle options) {
-        _activity.startActivityForResult(intent, requestCode, options);
+        mActivity.startActivityForResult(intent, requestCode, options);
     }
 
     /**
@@ -1832,7 +1838,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                            int flagsMask,
                                            int flagsValues,
                                            int extraFlags) throws SendIntentException {
-        _activity.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags);
+        mActivity.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags);
     }
 
     /**
@@ -1854,7 +1860,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                            int flagsValues,
                                            int extraFlags,
                                            Bundle options) throws SendIntentException {
-        _activity.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
+        mActivity.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
     }
 
     /**
@@ -1862,7 +1868,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#startActivity(android.content.Intent)
      */
     public void startActivity(Intent intent) {
-        _activity.startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     /**
@@ -1873,7 +1879,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void startActivity(Intent intent,
                               Bundle options) {
-        _activity.startActivity(intent, options);
+        mActivity.startActivity(intent, options);
     }
 
     /**
@@ -1881,7 +1887,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#startActivities(android.content.Intent[])
      */
     public void startActivities(Intent[] intents) {
-        _activity.startActivities(intents);
+        mActivity.startActivities(intents);
     }
 
     /**
@@ -1892,7 +1898,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void startActivities(Intent[] intents,
                                 Bundle options) {
-        _activity.startActivities(intents, options);
+        mActivity.startActivities(intents, options);
     }
 
     /**
@@ -1910,7 +1916,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                   int flagsMask,
                                   int flagsValues,
                                   int extraFlags) throws SendIntentException {
-        _activity.startIntentSender(intent, fillInIntent, flagsMask, flagsValues, extraFlags);
+        mActivity.startIntentSender(intent, fillInIntent, flagsMask, flagsValues, extraFlags);
     }
 
     /**
@@ -1930,7 +1936,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                   int flagsValues,
                                   int extraFlags,
                                   Bundle options) throws SendIntentException {
-        _activity.startIntentSender(intent, fillInIntent, flagsMask, flagsValues, extraFlags, options);
+        mActivity.startIntentSender(intent, fillInIntent, flagsMask, flagsValues, extraFlags, options);
     }
 
     /**
@@ -1942,7 +1948,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean startActivityIfNeeded(Intent intent,
                                          int requestCode) {
-        return _activity.startActivityIfNeeded(intent, requestCode);
+        return mActivity.startActivityIfNeeded(intent, requestCode);
     }
 
     /**
@@ -1956,7 +1962,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public boolean startActivityIfNeeded(Intent intent,
                                          int requestCode,
                                          Bundle options) {
-        return _activity.startActivityIfNeeded(intent, requestCode, options);
+        return mActivity.startActivityIfNeeded(intent, requestCode, options);
     }
 
     /**
@@ -1965,7 +1971,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#startNextMatchingActivity(android.content.Intent)
      */
     public boolean startNextMatchingActivity(Intent intent) {
-        return _activity.startNextMatchingActivity(intent);
+        return mActivity.startNextMatchingActivity(intent);
     }
 
     /**
@@ -1977,7 +1983,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean startNextMatchingActivity(Intent intent,
                                              Bundle options) {
-        return _activity.startNextMatchingActivity(intent, options);
+        return mActivity.startNextMatchingActivity(intent, options);
     }
 
     /**
@@ -1990,7 +1996,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public void startActivityFromChild(Activity child,
                                        Intent intent,
                                        int requestCode) {
-        _activity.startActivityFromChild(child, intent, requestCode);
+        mActivity.startActivityFromChild(child, intent, requestCode);
     }
 
     /**
@@ -2005,7 +2011,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                        Intent intent,
                                        int requestCode,
                                        Bundle options) {
-        _activity.startActivityFromChild(child, intent, requestCode, options);
+        mActivity.startActivityFromChild(child, intent, requestCode, options);
     }
 
     /**
@@ -2018,7 +2024,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public void startActivityFromFragment(Fragment fragment,
                                           Intent intent,
                                           int requestCode) {
-        _activity.startActivityFromFragment(fragment, intent, requestCode);
+        mActivity.startActivityFromFragment(fragment, intent, requestCode);
     }
 
     /**
@@ -2033,7 +2039,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                           Intent intent,
                                           int requestCode,
                                           Bundle options) {
-        _activity.startActivityFromFragment(fragment, intent, requestCode, options);
+        mActivity.startActivityFromFragment(fragment, intent, requestCode, options);
     }
 
     /**
@@ -2056,7 +2062,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                            int flagsMask,
                                            int flagsValues,
                                            int extraFlags) throws SendIntentException {
-        _activity.startIntentSenderFromChild(child, intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags);
+        mActivity.startIntentSenderFromChild(child, intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags);
     }
 
     /**
@@ -2081,7 +2087,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                                            int flagsValues,
                                            int extraFlags,
                                            Bundle options) throws SendIntentException {
-        _activity.startIntentSenderFromChild(child, intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
+        mActivity.startIntentSenderFromChild(child, intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
     }
 
     /**
@@ -2091,7 +2097,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void overridePendingTransition(int enterAnim,
                                           int exitAnim) {
-        _activity.overridePendingTransition(enterAnim, exitAnim);
+        mActivity.overridePendingTransition(enterAnim, exitAnim);
     }
 
     /**
@@ -2099,7 +2105,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setResult(int)
      */
     public final void setResult(int resultCode) {
-        _activity.setResult(resultCode);
+        mActivity.setResult(resultCode);
     }
 
     /**
@@ -2109,7 +2115,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public final void setResult(int resultCode,
                                 Intent data) {
-        _activity.setResult(resultCode, data);
+        mActivity.setResult(resultCode, data);
     }
 
     /**
@@ -2117,7 +2123,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getCallingPackage()
      */
     public String getCallingPackage() {
-        return _activity.getCallingPackage();
+        return mActivity.getCallingPackage();
     }
 
     /**
@@ -2125,7 +2131,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getCallingActivity()
      */
     public ComponentName getCallingActivity() {
-        return _activity.getCallingActivity();
+        return mActivity.getCallingActivity();
     }
 
     /**
@@ -2133,7 +2139,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setVisible(boolean)
      */
     public void setVisible(boolean visible) {
-        _activity.setVisible(visible);
+        mActivity.setVisible(visible);
     }
 
     /**
@@ -2141,7 +2147,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#isFinishing()
      */
     public boolean isFinishing() {
-        return _activity.isFinishing();
+        return mActivity.isFinishing();
     }
 
     /**
@@ -2149,7 +2155,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#isChangingConfigurations()
      */
     public boolean isChangingConfigurations() {
-        return _activity.isChangingConfigurations();
+        return mActivity.isChangingConfigurations();
     }
 
     /**
@@ -2157,7 +2163,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#recreate()
      */
     public void recreate() {
-        _activity.recreate();
+        mActivity.recreate();
     }
 
     /**
@@ -2165,7 +2171,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#finish()
      */
     public void finish() {
-        _activity.finish();
+        mActivity.finish();
     }
 
     /**
@@ -2173,7 +2179,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#finishAffinity()
      */
     public void finishAffinity() {
-        _activity.finishAffinity();
+        mActivity.finishAffinity();
     }
 
     /**
@@ -2181,7 +2187,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#finishFromChild(android.app.Activity)
      */
     public void finishFromChild(Activity child) {
-        _activity.finishFromChild(child);
+        mActivity.finishFromChild(child);
     }
 
     /**
@@ -2189,7 +2195,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#finishActivity(int)
      */
     public void finishActivity(int requestCode) {
-        _activity.finishActivity(requestCode);
+        mActivity.finishActivity(requestCode);
     }
 
     /**
@@ -2200,7 +2206,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public void finishActivityFromChild(Activity child,
                                         int requestCode) {
-        _activity.finishActivityFromChild(child, requestCode);
+        mActivity.finishActivityFromChild(child, requestCode);
     }
 
     /**
@@ -2214,7 +2220,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public PendingIntent createPendingResult(int requestCode,
                                              Intent data,
                                              int flags) {
-        return _activity.createPendingResult(requestCode, data, flags);
+        return mActivity.createPendingResult(requestCode, data, flags);
     }
 
     /**
@@ -2222,7 +2228,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setRequestedOrientation(int)
      */
     public void setRequestedOrientation(int requestedOrientation) {
-        _activity.setRequestedOrientation(requestedOrientation);
+        mActivity.setRequestedOrientation(requestedOrientation);
     }
 
     /**
@@ -2230,7 +2236,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getRequestedOrientation()
      */
     public int getRequestedOrientation() {
-        return _activity.getRequestedOrientation();
+        return mActivity.getRequestedOrientation();
     }
 
     /**
@@ -2238,7 +2244,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getTaskId()
      */
     public int getTaskId() {
-        return _activity.getTaskId();
+        return mActivity.getTaskId();
     }
 
     /**
@@ -2246,7 +2252,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#isTaskRoot()
      */
     public boolean isTaskRoot() {
-        return _activity.isTaskRoot();
+        return mActivity.isTaskRoot();
     }
 
     /**
@@ -2255,7 +2261,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#moveTaskToBack(boolean)
      */
     public boolean moveTaskToBack(boolean nonRoot) {
-        return _activity.moveTaskToBack(nonRoot);
+        return mActivity.moveTaskToBack(nonRoot);
     }
 
     /**
@@ -2263,7 +2269,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getLocalClassName()
      */
     public String getLocalClassName() {
-        return _activity.getLocalClassName();
+        return mActivity.getLocalClassName();
     }
 
     /**
@@ -2271,7 +2277,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getComponentName()
      */
     public ComponentName getComponentName() {
-        return _activity.getComponentName();
+        return mActivity.getComponentName();
     }
 
     /**
@@ -2280,7 +2286,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getPreferences(int)
      */
     public SharedPreferences getPreferences(int mode) {
-        return _activity.getPreferences(mode);
+        return mActivity.getPreferences(mode);
     }
 
     /**
@@ -2289,7 +2295,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getSystemService(java.lang.String)
      */
     public Object getSystemService(String name) {
-        return _activity.getSystemService(name);
+        return mActivity.getSystemService(name);
     }
 
     /**
@@ -2297,7 +2303,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setTitle(java.lang.CharSequence)
      */
     public void setTitle(CharSequence title) {
-        _activity.setTitle(title);
+        mActivity.setTitle(title);
     }
 
     /**
@@ -2305,7 +2311,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setTitle(int)
      */
     public void setTitle(int titleId) {
-        _activity.setTitle(titleId);
+        mActivity.setTitle(titleId);
     }
 
     /**
@@ -2313,7 +2319,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setTitleColor(int)
      */
     public void setTitleColor(int textColor) {
-        _activity.setTitleColor(textColor);
+        mActivity.setTitleColor(textColor);
     }
 
     /**
@@ -2321,7 +2327,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getTitle()
      */
     public final CharSequence getTitle() {
-        return _activity.getTitle();
+        return mActivity.getTitle();
     }
 
     /**
@@ -2329,7 +2335,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getTitleColor()
      */
     public final int getTitleColor() {
-        return _activity.getTitleColor();
+        return mActivity.getTitleColor();
     }
 
     /**
@@ -2337,7 +2343,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setProgressBarVisibility(boolean)
      */
     public final void setProgressBarVisibility(boolean visible) {
-        _activity.setProgressBarVisibility(visible);
+        mActivity.setProgressBarVisibility(visible);
     }
 
     /**
@@ -2345,7 +2351,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setProgressBarIndeterminateVisibility(boolean)
      */
     public final void setProgressBarIndeterminateVisibility(boolean visible) {
-        _activity.setProgressBarIndeterminateVisibility(visible);
+        mActivity.setProgressBarIndeterminateVisibility(visible);
     }
 
     /**
@@ -2353,7 +2359,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setProgressBarIndeterminate(boolean)
      */
     public final void setProgressBarIndeterminate(boolean indeterminate) {
-        _activity.setProgressBarIndeterminate(indeterminate);
+        mActivity.setProgressBarIndeterminate(indeterminate);
     }
 
     /**
@@ -2361,7 +2367,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setProgress(int)
      */
     public final void setProgress(int progress) {
-        _activity.setProgress(progress);
+        mActivity.setProgress(progress);
     }
 
     /**
@@ -2369,7 +2375,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setSecondaryProgress(int)
      */
     public final void setSecondaryProgress(int secondaryProgress) {
-        _activity.setSecondaryProgress(secondaryProgress);
+        mActivity.setSecondaryProgress(secondaryProgress);
     }
 
     /**
@@ -2377,7 +2383,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#setVolumeControlStream(int)
      */
     public final void setVolumeControlStream(int streamType) {
-        _activity.setVolumeControlStream(streamType);
+        mActivity.setVolumeControlStream(streamType);
     }
 
     /**
@@ -2385,7 +2391,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getVolumeControlStream()
      */
     public final int getVolumeControlStream() {
-        return _activity.getVolumeControlStream();
+        return mActivity.getVolumeControlStream();
     }
 
     /**
@@ -2393,7 +2399,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#runOnUiThread(java.lang.Runnable)
      */
     public final void runOnUiThread(Runnable action) {
-        _activity.runOnUiThread(action);
+        mActivity.runOnUiThread(action);
     }
 
     /**
@@ -2407,7 +2413,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public View onCreateView(String name,
                              Context context,
                              AttributeSet attrs) {
-        return _activity.onCreateView(name, context, attrs);
+        return mActivity.onCreateView(name, context, attrs);
     }
 
     /**
@@ -2424,7 +2430,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                              String name,
                              Context context,
                              AttributeSet attrs) {
-        return _activity.onCreateView(parent, name, context, attrs);
+        return mActivity.onCreateView(parent, name, context, attrs);
     }
 
     /**
@@ -2439,7 +2445,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
                      FileDescriptor fd,
                      PrintWriter writer,
                      String[] args) {
-        _activity.dump(prefix, fd, writer, args);
+        mActivity.dump(prefix, fd, writer, args);
     }
 
     /**
@@ -2448,7 +2454,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#startActionMode(android.view.ActionMode.Callback)
      */
     public ActionMode startActionMode(Callback callback) {
-        return _activity.startActionMode(callback);
+        return mActivity.startActionMode(callback);
     }
 
     /**
@@ -2457,7 +2463,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onWindowStartingActionMode(android.view.ActionMode.Callback)
      */
     public ActionMode onWindowStartingActionMode(Callback callback) {
-        return _activity.onWindowStartingActionMode(callback);
+        return mActivity.onWindowStartingActionMode(callback);
     }
 
     /**
@@ -2465,7 +2471,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onActionModeStarted(android.view.ActionMode)
      */
     public void onActionModeStarted(ActionMode mode) {
-        _activity.onActionModeStarted(mode);
+        mActivity.onActionModeStarted(mode);
     }
 
     /**
@@ -2473,7 +2479,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#onActionModeFinished(android.view.ActionMode)
      */
     public void onActionModeFinished(ActionMode mode) {
-        _activity.onActionModeFinished(mode);
+        mActivity.onActionModeFinished(mode);
     }
 
     /**
@@ -2482,7 +2488,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#shouldUpRecreateTask(android.content.Intent)
      */
     public boolean shouldUpRecreateTask(Intent targetIntent) {
-        return _activity.shouldUpRecreateTask(targetIntent);
+        return mActivity.shouldUpRecreateTask(targetIntent);
     }
 
     /**
@@ -2491,7 +2497,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#navigateUpTo(android.content.Intent)
      */
     public boolean navigateUpTo(Intent upIntent) {
-        return _activity.navigateUpTo(upIntent);
+        return mActivity.navigateUpTo(upIntent);
     }
 
     /**
@@ -2503,7 +2509,7 @@ public class ActivityProxyDelegate implements ActivityProxy {
      */
     public boolean navigateUpToFromChild(Activity child,
                                          Intent upIntent) {
-        return _activity.navigateUpToFromChild(child, upIntent);
+        return mActivity.navigateUpToFromChild(child, upIntent);
     }
 
     /**
@@ -2511,108 +2517,92 @@ public class ActivityProxyDelegate implements ActivityProxy {
      * @see android.app.Activity#getParentActivityIntent()
      */
     public Intent getParentActivityIntent() {
-        return _activity.getParentActivityIntent();
+        return mActivity.getParentActivityIntent();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onCreate(savedInstanceState);
+        mProxy.onCreate(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onRestoreInstanceState(savedInstanceState);
+        mProxy.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onPostCreate(savedInstanceState);
+        mProxy.onPostCreate(savedInstanceState);
     }
 
     @Override
     public void onStart() {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onStart();
+        mProxy.onStart();
     }
 
     @Override
     public void onRestart() {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onRestart();
+        mProxy.onRestart();
     }
 
     @Override
     public void onResume() {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onResume();
+        mProxy.onResume();
     }
 
     @Override
     public void onPostResume() {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onPostResume();
+        mProxy.onPostResume();
     }
 
     @Override
     public void onNewIntent(Intent intent) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onNewIntent(intent);
+        mProxy.onNewIntent(intent);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onSaveInstanceState(outState);
+        mProxy.onSaveInstanceState(outState);
     }
 
     @Override
     public void onPause() {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onPause();
+        mProxy.onPause();
     }
 
     @Override
     public void onUserLeaveHint() {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onUserLeaveHint();
+        mProxy.onUserLeaveHint();
     }
 
     @Override
     public void onStop() {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onStop();
+        mProxy.onStop();
     }
 
     @Override
     public void onDestroy() {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onDestroy();
+        mProxy.onDestroy();
     }
 
     @Override
     @Deprecated
     public Dialog onCreateDialog(int id) {
-        return DelegateFactory.create(ActivityProxy.class, _activity)
-                              .onCreateDialog(id);
+        return mProxy.onCreateDialog(id);
     }
 
     @Override
     @Deprecated
     public Dialog onCreateDialog(int id,
                                  Bundle args) {
-        return DelegateFactory.create(ActivityProxy.class, _activity)
-                              .onCreateDialog(id, args);
+        return mProxy.onCreateDialog(id, args);
     }
 
     @Override
     @Deprecated
     public void onPrepareDialog(int id,
                                 Dialog dialog) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onPrepareDialog(id, dialog);
+        mProxy.onPrepareDialog(id, dialog);
     }
 
     @Override
@@ -2620,38 +2610,33 @@ public class ActivityProxyDelegate implements ActivityProxy {
     public void onPrepareDialog(int id,
                                 Dialog dialog,
                                 Bundle args) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onPrepareDialog(id, dialog, args);
+        mProxy.onPrepareDialog(id, dialog, args);
     }
 
     @Override
     public void onApplyThemeResource(Theme theme,
                                      int resid,
                                      boolean first) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onApplyThemeResource(theme, resid, first);
+        mProxy.onApplyThemeResource(theme, resid, first);
     }
 
     @Override
     public void onActivityResult(int requestCode,
                                  int resultCode,
                                  Intent data) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onActivityResult(requestCode, resultCode, data);
+        mProxy.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onTitleChanged(CharSequence title,
                                int color) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onTitleChanged(title, color);
+        mProxy.onTitleChanged(title, color);
     }
 
     @Override
     public void onChildTitleChanged(Activity childActivity,
                                     CharSequence title) {
-        DelegateFactory.create(ActivityProxy.class, _activity)
-                       .onChildTitleChanged(childActivity, title);
+        mProxy.onChildTitleChanged(childActivity, title);
     }
 
     @Override
@@ -2689,4 +2674,19 @@ public class ActivityProxyDelegate implements ActivityProxy {
         onUserLeaveHint();
     }
 
+    @Override
+    public void attach(Context context,
+                       @DeclaredIn("android.app.ActivityThread") Object aThread,
+                       Instrumentation instr,
+                       IBinder token,
+                       Application application,
+                       Intent intent,
+                       ActivityInfo info,
+                       CharSequence title,
+                       Activity parent,
+                       String id,
+                       @DeclaredIn("android.app.Activity$NonConfigurationInstances") Object lastNonConfigurationInstances,
+                       Configuration config) {
+        mProxy.attach(context, aThread, instr, token, application, intent, info, title, parent, id, lastNonConfigurationInstances, config);
+    }
 }
