@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 
@@ -162,5 +163,20 @@ public class ActivityUnitTestCaseTest extends ActivityUnitTestCase<TestSpyActivi
         getActivity().finish();
 
         assertTrue(isFinishCalled());
+    }
+
+    /**
+     * The test for getFinishedActivityRequest();
+     */
+    public void shouldReturnsResultCodeWhenResultCodeSet() {
+
+        startActivity(_startIntent, null, null);
+
+        assertThat(getFinishedActivityRequest(), is(Activity.RESULT_CANCELED));
+
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
+
+        assertThat(getFinishedActivityRequest(), is(Activity.RESULT_OK));
     }
 }

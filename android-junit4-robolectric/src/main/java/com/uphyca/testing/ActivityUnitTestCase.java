@@ -154,10 +154,7 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
     }
 
     public int getFinishedActivityRequest() {
-        if (mMockParent != null) {
-            return mMockParent.mFinishedActivityRequest;
-        }
-        return 0;
+        return Robolectric.shadowOf(getActivity()).getResultCode();
     }
 
     private static class MockParent extends Activity {
