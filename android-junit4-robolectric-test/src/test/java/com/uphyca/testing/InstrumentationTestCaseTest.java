@@ -1,4 +1,4 @@
-package com.uphyca.testing.robolectric;
+package com.uphyca.testing;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -23,6 +23,7 @@ import android.content.pm.ResolveInfo;
 
 import com.uphyca.testing.AndroidTestRunner;
 import com.uphyca.testing.InstrumentationTestCase;
+import com.uphyca.testing.robolectric.MainActivity;
 import com.xtremelabs.robolectric.res.RobolectricPackageManager;
 
 @RunWith(AndroidTestRunner.class)

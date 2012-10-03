@@ -115,6 +115,45 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
         mApplication = application;
     }
 
+    public void setActivityContext(Context activityContext) {
+        mActivityContext = activityContext;
+    }
+
+    public int getRequestedOrientation() {
+        if (mMockParent != null) {
+            return mMockParent.mRequestedOrientation;
+        }
+        return 0;
+    }
+
+    public Intent getStartedActivityIntent() {
+        if (mMockParent != null) {
+            return mMockParent.mStartedActivityIntent;
+        }
+        return null;
+    }
+
+    public int getStartedActivityRequest() {
+        if (mMockParent != null) {
+            return mMockParent.mStartedActivityRequest;
+        }
+        return 0;
+    }
+
+    public boolean isFinishCalled() {
+        if (mMockParent != null) {
+            return mMockParent.mFinished;
+        }
+        return false;
+    }
+
+    public int getFinishedActivityRequest() {
+        if (mMockParent != null) {
+            return mMockParent.mFinishedActivityRequest;
+        }
+        return 0;
+    }
+
     private static class MockParent extends Activity {
 
         public int mRequestedOrientation = 0;

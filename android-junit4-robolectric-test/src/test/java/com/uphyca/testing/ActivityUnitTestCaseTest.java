@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.uphyca.testing.robolectric;
+package com.uphyca.testing;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -28,6 +28,7 @@ import android.content.Intent;
 
 import com.uphyca.testing.ActivityUnitTestCase;
 import com.uphyca.testing.AndroidTestRunner;
+import com.uphyca.testing.robolectric.TestSpyActivity;
 
 @RunWith(AndroidTestRunner.class)
 public class ActivityUnitTestCaseTest extends ActivityUnitTestCase<TestSpyActivity> {

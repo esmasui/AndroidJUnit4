@@ -1,4 +1,4 @@
-package com.uphyca.testing.robolectric;
+package com.uphyca.testing;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.uphyca.testing.ActivityUnitTestCase;
 import com.uphyca.testing.AndroidTestRunner;
+import com.uphyca.testing.robolectric.MainActivity;
 import com.uphyca.testing.robolectric.test.R;
 
 @RunWith(AndroidTestRunner.class)
