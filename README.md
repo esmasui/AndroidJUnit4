@@ -1,3 +1,5 @@
+Jenkins-CI [![Build Status](http://jenkins.android-tec.org/job/JUnit4InstrumentationTestRunnerMaven/badge/icon)](http://jenkins.android-tec.org/job/JUnit4InstrumentationTestRunnerMaven/)
+
 AndroidJUnit4
 =============
 
