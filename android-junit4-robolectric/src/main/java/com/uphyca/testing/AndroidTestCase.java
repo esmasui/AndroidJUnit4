@@ -23,6 +23,9 @@ import static org.junit.Assert.assertNotNull;
 
 import java.lang.reflect.Field;
 
+import org.junit.After;
+import org.junit.Before;
+
 import android.content.Context;
 import android.net.Uri;
 
@@ -43,10 +46,12 @@ public class AndroidTestCase {
         setTestContext(context);
     }
 
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
     }
 
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
     }
 
     public void testAndroidTestCaseSetupProperly() {

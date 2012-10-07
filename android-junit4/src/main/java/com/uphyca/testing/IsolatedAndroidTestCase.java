@@ -124,7 +124,7 @@ public class IsolatedAndroidTestCase extends AndroidTestCase {
      * Gets the isolated context created by this class during initialization.
      * @return The isolated context instance
      */
-    protected Context getMockContext() {
+    protected IsolatedContext getMockContext() {
         return _isolatedContext;
     }
 }

@@ -1,6 +1,9 @@
 package com.uphyca.testing;
 
-import android.content.Context;
+import org.junit.Before;
+
+import android.test.IsolatedContext;
+import android.test.mock.MockContentResolver;
 
 /**
  * Extend this if you need to access Resources or other things that depend on Activity Context.
@@ -10,11 +13,21 @@ import android.content.Context;
  */
 public class IsolatedAndroidTestCase extends AndroidTestCase {
 
+    private IsolatedContext mMockContext;
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        mMockContext = new IsolatedContext(new MockContentResolver(),
+                                           getContext());
+    }
+
     /**
      * Gets the isolated context created by this class during initialization.
      * @return The isolated context instance
      */
-    protected Context getMockContext() {
-        return getContext();
+    protected IsolatedContext getMockContext() {
+        return mMockContext;
     }
 }
