@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.uphyca.testing.junit3.support.v4;
+package com.uphyca.testing.support.v4;
 
-import com.uphyca.testing.support.v4.MockFragmentActivity;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.After;
+import org.junit.Before;
 
 import android.app.Activity;
 import android.app.ActivityTrojanHorse;
@@ -28,11 +32,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManagerImplTrojanHorse;
-import android.support.v4.app.FragmentStateTrojanHorse;
 import android.test.mock.MockApplication;
 import android.view.Window;
+
+import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.shadows.ShadowFragment;
+import com.xtremelabs.robolectric.tester.android.util.TestFragmentManager;
 
 /**
  * This class provides isolated testing of a single fragment.  The fragment under test will
@@ -51,7 +56,6 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     private FragmentActivity mActivity;
     private Application mApplication;
     private MockParent mMockParent;
-    private FragmentManagerImplTrojanHorse mFragmentManager;
     private boolean mAttached = false;
     private boolean mCreated = false;
 
@@ -68,11 +72,9 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         return (T) super.getFragment();
     }
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
     @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         super.setUp();
 
         // default value for target context, as a default
@@ -101,8 +103,7 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     protected T startFragment(Bundle arguments,
                               Bundle savedInstanceState,
                               Object lastNonConfigurationInstance) {
-        assertFalse("Fragment already created",
-                    mCreated);
+        assertFalse("Fragment already created", mCreated);
 
         if (!mAttached) {
             setFragment(null);
@@ -115,59 +116,57 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
                 if (mActivity == null) {
                     setActivity(new MockFragmentActivity());
                 }
-                ComponentName cn = new ComponentName(mActivity.getClass().getPackage().getName(), mActivity.getClass().getName());
+                ComponentName cn = new ComponentName(mActivity.getClass()
+                                                              .getPackage()
+                                                              .getName(),
+                                                     mActivity.getClass()
+                                                              .getName());
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.setComponent(cn);
                 ActivityInfo info = new ActivityInfo();
-                CharSequence title = mActivity.getClass().getName();
+                CharSequence title = mActivity.getClass()
+                                              .getName();
                 mMockParent = new MockParent();
                 String id = null;
-                ActivityTrojanHorse.callAttach(getInstrumentation(),
-                                               mActivity,
-                                               mFragmentContext,
-                                               token,
-                                               mApplication,
-                                               intent,
-                                               info,
-                                               title,
-                                               mMockParent,
-                                               id,
-                                               lastNonConfigurationInstance);
-                FragmentManager fm = mActivity.getSupportFragmentManager();
-                mFragmentManager = FragmentManagerImplTrojanHorse.create(fm);
-                FragmentStateTrojanHorse fragmentState = new FragmentStateTrojanHorse();
-                fragmentState.setClassName(mFragmentClass.getName());
-                fragmentState.setArguments(arguments);
-                fragmentState.setSavedFragmentState(savedInstanceState);
-                newFragment = fragmentState.instantiate(mActivity);
+                ActivityTrojanHorse.callAttach(getInstrumentation(), mActivity, mFragmentContext, token, mApplication, intent, info, title, mMockParent, id, lastNonConfigurationInstance);
+
+                newFragment = mFragmentClass.newInstance();
+                ShadowFragment shadow = Robolectric.shadowOf(newFragment);
+                newFragment.setArguments(arguments);
+                shadow.setSavedInstanceState(savedInstanceState);
+
             } catch (Exception e) {
                 assertNotNull(newFragment);
             }
 
             assertNotNull(newFragment);
-            setFragment(newFragment);
 
             mAttached = true;
+
+            T result = newFragment;
+            if (result != null) {
+
+                TestFragmentManager fm = (TestFragmentManager) mActivity.getSupportFragmentManager();
+                fm.addFragment(0, null, result, true);
+                
+                setFragment(result);
+
+                mCreated = true;
+            }
+            
+            return result;
+
         }
 
-        T result = getFragment();
-        if (result != null) {
-
-            mFragmentManager.attachActivity(mActivity);
-            mFragmentManager.addFragment(result,
-                                         true);
-            getFragmentInstrumentation().callFragmentOnCreate();
-
-            mCreated = true;
-        }
-        return result;
+        return null;
     }
 
     /* (non-Javadoc)
      * @see android.test.InstrumentationTestCase#tearDown()
      */
     @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
 
         if (mAttached) {
             getFragmentInstrumentation().callFragmentOnDestroy();
