@@ -34,12 +34,21 @@
             <version>4.10</version>
         </dependency>
         
+        <!-- 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>1.9.5-rc1</version>
         </dependency>
-
+        -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.5</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/mockito-core-1.9.5.jar</systemPath> 
+        </dependency>
+        
         <dependency>
             <groupId>org.objenesis</groupId>
             <artifactId>objenesis</artifactId>
@@ -47,13 +56,17 @@
         </dependency>
 
         <dependency>
-            <groupId>com.android.dx</groupId>
+            <groupId>com.google.dexmaker</groupId>
             <artifactId>dexmaker</artifactId>
-            <version>20120622</version>
-	    <scope>system</scope>
-	    <systemPath>${basedir}/libs/dexmaker-20120622.jar</systemPath> 
+            <version>0.9</version>
         </dependency>
-
+        
+        <dependency>
+            <groupId>com.google.dexmaker</groupId>
+            <artifactId>dexmaker-mockito</artifactId>
+            <version>0.9</version>
+        </dependency>
+  
 
     </dependencies>
 
@@ -107,6 +120,8 @@
                         <exclude>com.uphyca:android-junit4</exclude>
                         <exclude>org.mockito:mockito-core</exclude>
                         <exclude>org.objenesis:objenesis</exclude>
+                        <exclude>com.google.dexmaker:dexmaker</exclude>
+                        <exclude>com.google.dexmaker:dexmaker-mockito</exclude>
 				    </excludes>
 				    <classpathContainersLast>true</classpathContainersLast>
 					<classpathContainers>
@@ -213,6 +228,7 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>libs</outputDirectory>
                                 </artifactItem>
+                                <!-- 
                                 <artifactItem>
                                     <groupId>org.mockito</groupId>
                                     <artifactId>mockito-core</artifactId>
@@ -221,6 +237,7 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>libs</outputDirectory>
                                 </artifactItem>
+                                -->
                                 <artifactItem>
                                     <groupId>org.objenesis</groupId>
                                     <artifactId>objenesis</artifactId>
@@ -229,7 +246,22 @@
                                     <overWrite>false</overWrite>
                                     <outputDirectory>libs</outputDirectory>
                                 </artifactItem>
-
+                                <artifactItem>
+                                    <groupId>com.google.dexmaker</groupId>
+                                    <artifactId>dexmaker</artifactId>
+                                    <version>0.9</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>libs</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.google.dexmaker</groupId>
+                                    <artifactId>dexmaker-mockito</artifactId>
+                                    <version>0.9</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>libs</outputDirectory>
+                                </artifactItem>
                             </artifactItems>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
