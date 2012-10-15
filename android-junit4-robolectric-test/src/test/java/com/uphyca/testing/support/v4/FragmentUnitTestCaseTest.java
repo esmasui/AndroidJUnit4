@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -192,5 +193,20 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
         assertFalse(getFragment().onStopCalled);
         getFragmentInstrumentation().callFragmentOnStop();
         assertTrue(getFragment().onStopCalled);
+    }
+
+    @Test
+    public void shouldCaptureStartedActivityIntent() {
+
+        // Given
+        startFragment(null, null, null);
+
+        // When
+        Intent startIntent = new Intent(Intent.ACTION_VIEW);
+        getFragment().startActivity(startIntent);
+
+        // Then
+        Intent startedIntent = getStartedActivityIntent();
+        assertNotNull(startedIntent);
     }
 }

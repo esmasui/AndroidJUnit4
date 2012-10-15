@@ -130,7 +130,7 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
                 String id = null;
                 ActivityTrojanHorse.callAttach(getInstrumentation(), mActivity, mFragmentContext, token, mApplication, intent, info, title, mMockParent, id, lastNonConfigurationInstance);
 
-                newFragment = mFragmentClass.newInstance();
+                newFragment = Robolectric.newInstanceOf(mFragmentClass);
                 ShadowFragment shadow = Robolectric.shadowOf(newFragment);
                 newFragment.setArguments(arguments);
                 shadow.setSavedInstanceState(savedInstanceState);
@@ -215,10 +215,11 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      * {@link android.app.Activity#setRequestedOrientation}.
      */
     public int getRequestedOrientation() {
-        if (mMockParent != null) {
-            return mMockParent.mRequestedOrientation;
-        }
-        return 0;
+//        if (mMockParent != null) {
+//            return mMockParent.mRequestedOrientation;
+//        }
+//        return 0;
+        return Robolectric.shadowOf(mActivity).getRequestedOrientation();
     }
 
     /**
@@ -228,10 +229,11 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      * @return The Intent provided in the start call, or null if no start call was made.
      */
     public Intent getStartedActivityIntent() {
-        if (mMockParent != null) {
-            return mMockParent.mStartedActivityIntent;
-        }
-        return null;
+//        if (mMockParent != null) {
+//            return mMockParent.mStartedActivityIntent;
+//        }
+//        return null;
+        return Robolectric.shadowOf(mActivity).getNextStartedActivity();
     }
 
     /**
@@ -240,10 +242,11 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      * @return The request code provided in the start call, or -1 if no start call was made.
      */
     public int getStartedActivityRequest() {
-        if (mMockParent != null) {
-            return mMockParent.mStartedActivityRequest;
-        }
-        return 0;
+//        if (mMockParent != null) {
+//            return mMockParent.mStartedActivityRequest;
+//        }
+//        return 0;
+        return Robolectric.shadowOf(mActivity).getNextStartedActivityForResult().requestCode;
     }
 
     /**
@@ -254,10 +257,11 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      * @return Returns true if one of the listed finish methods was called.
      */
     public boolean isFinishCalled() {
-        if (mMockParent != null) {
-            return mMockParent.mFinished;
-        }
-        return false;
+//        if (mMockParent != null) {
+//            return mMockParent.mFinished;
+//        }
+//        return false;
+        return Robolectric.shadowOf(mActivity).isFinishing();
     }
 
     /**
@@ -266,10 +270,11 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      * @return The request code provided in the start call, or -1 if no finish call was made.
      */
     public int getFinishedActivityRequest() {
-        if (mMockParent != null) {
-            return mMockParent.mFinishedActivityRequest;
-        }
-        return 0;
+//        if (mMockParent != null) {
+//            return mMockParent.mFinishedActivityRequest;
+//        }
+//        return 0;
+        return Robolectric.shadowOf(mActivity).getResultCode();
     }
 
     /**

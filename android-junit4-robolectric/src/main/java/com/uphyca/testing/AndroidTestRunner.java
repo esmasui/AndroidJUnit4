@@ -1,13 +1,19 @@
 package com.uphyca.testing;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 import org.junit.runners.model.InitializationError;
 
+import com.uphyca.testing.shadows.CustomShadowFragment;
+import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricConfig;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.bytecode.ClassHandler;
 import com.xtremelabs.robolectric.bytecode.RobolectricClassLoader;
+import com.xtremelabs.robolectric.shadows.ShadowBitmapFactory;
+import com.xtremelabs.robolectric.shadows.ShadowDrawable;
+import com.xtremelabs.robolectric.shadows.ShadowGeocoder;
 import com.xtremelabs.robolectric.util.DatabaseConfig.DatabaseMap;
 
 public class AndroidTestRunner extends RobolectricTestRunner {
@@ -58,4 +64,8 @@ public class AndroidTestRunner extends RobolectricTestRunner {
     public AndroidTestRunner(Class<?> testClass) throws InitializationError {
         super(testClass);
     }
+    
+    @Override public void beforeTest(Method method) {
+        Robolectric.bindShadowClass(CustomShadowFragment.class);
+    }    
 }
