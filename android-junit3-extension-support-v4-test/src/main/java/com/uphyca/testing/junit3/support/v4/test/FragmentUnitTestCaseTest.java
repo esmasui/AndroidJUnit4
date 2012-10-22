@@ -18,6 +18,7 @@ package com.uphyca.testing.junit3.support.v4.test;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,14 +122,18 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
 
         MyFragment fragment = getFragment();
 
-        assertFalse(fragment.onDestroyViewCalled);
-        assertFalse(fragment.onDestroyCalled);
-        assertFalse(fragment.onDettachCalled);
+        if (fragment != null) {
+            assertFalse(fragment.onDestroyViewCalled);
+            assertFalse(fragment.onDestroyCalled);
+            assertFalse(fragment.onDettachCalled);
+        }
 
         super.tearDown();
 
-        assertTrue(fragment.onDestroyCalled);
-        assertTrue(fragment.onDettachCalled);
+        if (fragment != null) {
+            assertTrue(fragment.onDestroyCalled);
+            assertTrue(fragment.onDettachCalled);
+        }
     }
 
     public void testPreconditions() {
@@ -179,4 +184,19 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
         getFragmentInstrumentation().callFragmentOnStop();
         assertTrue(getFragment().onStopCalled);
     }
+
+    public void testThatFragmentManagerObtained() {
+        assertNotNull(getFragmentManager());
+    }
+
+    public void testThatFragmentManagerObtainedAfterSetActivityCalled() {
+        setActivity(new FragmentActivity());
+        assertNotNull(getFragmentManager());
+    }
+
+    public void testThatFragmentManagerObtainedAfterStartFragmentCalled() {
+        startFragment(null, null, null);
+        assertNotNull(getFragmentManager());
+    }
+
 }

@@ -21,8 +21,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 
-import com.uphyca.testing.AndroidTestRunner;
-import com.uphyca.testing.InstrumentationTestCase;
 import com.uphyca.testing.robolectric.MainActivity;
 import com.xtremelabs.robolectric.res.RobolectricPackageManager;
 
@@ -44,6 +42,13 @@ public class InstrumentationTestCaseTest extends InstrumentationTestCase {
         mContext = mInstr.getTargetContext();
 
         prepareForResolveActivity();
+    }
+
+    @Test
+    public void assertPreconditins() {
+        assertNotNull(getInstrumentation());
+        assertNotNull(getInstrumentation().getTargetContext());
+        assertNotNull(getInstrumentation().getContext());
     }
 
     private void prepareForResolveActivity() {
@@ -80,13 +85,14 @@ public class InstrumentationTestCaseTest extends InstrumentationTestCase {
 
         ActivityInfo activityInfo = pm.getActivityInfo(component, 0);
 
-        //Robolectric doesn't implements PackageManager.getActivityInfo() 
+        // Robolectric doesn't implements PackageManager.getActivityInfo()
         assertNull(activityInfo);
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldNotLaunchActivity() {
-        //Robolectric doesn't implements PackageManager.getActivityInfo() that is the method called from launcheActivity().
+        // Robolectric doesn't implements PackageManager.getActivityInfo() that
+        // is the method called from launcheActivity().
         @SuppressWarnings("unused")
         Activity activity = launchActivity(TEST_PACKAGE_NAME, MainActivity.class, null);
     }
@@ -96,7 +102,7 @@ public class InstrumentationTestCaseTest extends InstrumentationTestCase {
         runTestOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //Notify that the task invoked.
+                // Notify that the task invoked.
                 throw new Expected();
             }
         });

@@ -49,6 +49,7 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
     private boolean mCreated = false;
 
     public ActivityUnitTestCase(Class<T> activityClass) {
+        super();
         mActivityClass = activityClass;
     }
 

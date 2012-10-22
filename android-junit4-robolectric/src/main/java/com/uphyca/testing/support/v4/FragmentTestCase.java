@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import com.uphyca.testing.InstrumentationTestCase;
 
@@ -66,6 +67,14 @@ public class FragmentTestCase extends InstrumentationTestCase {
         mFragment = testFragment;
     }
 
+    /**
+     * Returns the fragment manager.
+     * @return
+     */
+    protected FragmentManager getFragmentManager(){
+        throw new UnsupportedOperationException();
+    }
+    
     /**
      * This function is called by various TestCase implementations, at tearDown() time, in order
      * to scrub out any class variables.  This protects against memory leaks in the case where a

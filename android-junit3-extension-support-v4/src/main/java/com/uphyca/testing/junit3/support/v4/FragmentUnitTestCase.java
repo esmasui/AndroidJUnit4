@@ -15,8 +15,6 @@
  */
 package com.uphyca.testing.junit3.support.v4;
 
-import com.uphyca.testing.support.v4.MockFragmentActivity;
-
 import android.app.Activity;
 import android.app.ActivityTrojanHorse;
 import android.app.Application;
@@ -34,13 +32,18 @@ import android.support.v4.app.FragmentStateTrojanHorse;
 import android.test.mock.MockApplication;
 import android.view.Window;
 
+import com.uphyca.testing.support.v4.MockFragmentActivity;
+
 /**
- * This class provides isolated testing of a single fragment.  The fragment under test will
- * be created with minimal connection to the system infrastructure, and you can inject mocked or 
- * wrappered versions of many of Fragment's dependencies.  Most of the work is handled
- * automatically here by {@link #setUp} and {@link #tearDown}.
+ * This class provides isolated testing of a single fragment. The fragment under
+ * test will be created with minimal connection to the system infrastructure,
+ * and you can inject mocked or wrappered versions of many of Fragment's
+ * dependencies. Most of the work is handled automatically here by
+ * {@link #setUp} and {@link #tearDown}.
  * 
- * <p>If you prefer a functional test, see {@link com.uphyca.testing.junit3.support.v4.FragmentInstrumentationTestCase}.
+ * <p>
+ * If you prefer a functional test, see
+ * {@link com.uphyca.testing.junit3.support.v4.FragmentInstrumentationTestCase}.
  * 
  */
 public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentTestCase {
@@ -54,12 +57,15 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     private FragmentManagerImplTrojanHorse mFragmentManager;
     private boolean mAttached = false;
     private boolean mCreated = false;
+    private boolean mActivityAttached = false;
 
     public FragmentUnitTestCase(Class<T> fragmentClass) {
         mFragmentClass = fragmentClass;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.uphyca.testing.junit3.support.v4.FragmentTestCase#getFragment()
      */
     @SuppressWarnings("unchecked")
@@ -68,7 +74,9 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         return (T) super.getFragment();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see junit.framework.TestCase#setUp()
      */
     @Override
@@ -80,59 +88,41 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     }
 
     /**
-     * Start the fragment under test, providing the 
-     * arguments it supplied.  When you use this method to start the fragment, it will automatically
-     * be stopped by {@link #tearDown}.
+     * Start the fragment under test, providing the arguments it supplied. When
+     * you use this method to start the fragment, it will automatically be
+     * stopped by {@link #tearDown}.
      * 
-     * <p>This method will call onAttach() either onCreate(), but if you wish to further exercise Activity life 
-     * cycle methods, you must call them yourself from your test case.
+     * <p>
+     * This method will call onAttach() either onCreate(), but if you wish to
+     * further exercise Activity life cycle methods, you must call them yourself
+     * from your test case.
      * 
-     * <p><i>Do not call from your setUp() method.  You must call this method from each of your
-     * test methods.</i>
+     * <p>
+     * <i>Do not call from your setUp() method. You must call this method from
+     * each of your test methods.</i>
      * 
-     * @param arguments The Bundle as if supplied to {@link android.support.v4.Fragment#setArguments(Bundle)}.
-     * @param savedInstanceState The instance state, if you are simulating this part of the life
-     * cycle.  Typically null.
-     * @param lastNonConfigurationInstance This Object will be available to the 
-     * Activity if it calls {@link android.app.Activity#getLastNonConfigurationInstance()}.  
-     * Typically null.
+     * @param arguments
+     *            The Bundle as if supplied to
+     *            {@link android.support.v4.Fragment#setArguments(Bundle)}.
+     * @param savedInstanceState
+     *            The instance state, if you are simulating this part of the
+     *            life cycle. Typically null.
+     * @param lastNonConfigurationInstance
+     *            This Object will be available to the Activity if it calls
+     *            {@link android.app.Activity#getLastNonConfigurationInstance()}
+     *            . Typically null.
      * @return Returns the Fragment that was created
      */
     protected T startFragment(Bundle arguments,
                               Bundle savedInstanceState,
                               Object lastNonConfigurationInstance) {
-        assertFalse("Fragment already created",
-                    mCreated);
+        assertFalse("Fragment already created", mCreated);
 
         if (!mAttached) {
             setFragment(null);
             T newFragment = null;
             try {
-                IBinder token = null;
-                if (mApplication == null) {
-                    setApplication(new MockApplication());
-                }
-                if (mActivity == null) {
-                    setActivity(new MockFragmentActivity());
-                }
-                ComponentName cn = new ComponentName(mActivity.getClass().getPackage().getName(), mActivity.getClass().getName());
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setComponent(cn);
-                ActivityInfo info = new ActivityInfo();
-                CharSequence title = mActivity.getClass().getName();
-                mMockParent = new MockParent();
-                String id = null;
-                ActivityTrojanHorse.callAttach(getInstrumentation(),
-                                               mActivity,
-                                               mFragmentContext,
-                                               token,
-                                               mApplication,
-                                               intent,
-                                               info,
-                                               title,
-                                               mMockParent,
-                                               id,
-                                               lastNonConfigurationInstance);
+                attachActivity(lastNonConfigurationInstance);
                 FragmentManager fm = mActivity.getSupportFragmentManager();
                 mFragmentManager = FragmentManagerImplTrojanHorse.create(fm);
                 FragmentStateTrojanHorse fragmentState = new FragmentStateTrojanHorse();
@@ -154,8 +144,7 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         if (result != null) {
 
             mFragmentManager.attachActivity(mActivity);
-            mFragmentManager.addFragment(result,
-                                         true);
+            mFragmentManager.addFragment(result, true);
             getFragmentInstrumentation().callFragmentOnCreate();
 
             mCreated = true;
@@ -163,7 +152,37 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         return result;
     }
 
-    /* (non-Javadoc)
+    private void attachActivity(Object lastNonConfigurationInstance) throws Exception {
+        if (mActivityAttached) {
+            return;
+        }
+
+        IBinder token = null;
+        if (mApplication == null) {
+            setApplication(new MockApplication());
+        }
+        if (mActivity == null) {
+            setActivity(new MockFragmentActivity());
+        }
+        ComponentName cn = new ComponentName(mActivity.getClass()
+                                                      .getPackage()
+                                                      .getName(), mActivity.getClass()
+                                                                           .getName());
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setComponent(cn);
+        ActivityInfo info = new ActivityInfo();
+        CharSequence title = mActivity.getClass()
+                                      .getName();
+        mMockParent = new MockParent();
+        String id = null;
+        ActivityTrojanHorse.callAttach(getInstrumentation(), mActivity, mFragmentContext, token, mApplication, intent, info, title, mMockParent, id, lastNonConfigurationInstance);
+
+        mActivityAttached = true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.test.InstrumentationTestCase#tearDown()
      */
     @Override
@@ -175,44 +194,92 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
 
         setFragment(null);
 
-        // Scrub out members - protects against memory leaks in the case where someone 
-        // creates a non-static inner class (thus referencing the test case) and gives it to
+        // Scrub out members - protects against memory leaks in the case where
+        // someone
+        // creates a non-static inner class (thus referencing the test case) and
+        // gives it to
         // someone else to hold onto
-        //FIXME 
-        //scrubClass(ActivityInstrumentationTestCase.class);
+        // FIXME
+        // scrubClass(ActivityInstrumentationTestCase.class);
 
         super.tearDown();
     }
 
     /**
-     * Set the application for use during the test.  You must call this function before calling 
-     * {@link #startFragment}.  If your test does not call this method,
-     * @param application The Application object that will be injected into the Activity under test.
+     * Set the application for use during the test. You must call this function
+     * before calling {@link #startFragment}. If your test does not call this
+     * method,
+     * 
+     * @param application
+     *            The Application object that will be injected into the Activity
+     *            under test.
      */
     public void setApplication(Application application) {
         mApplication = application;
     }
 
     /**
-     * Set the activity for use during the test.  You must call this function before calling 
-     * {@link #startFragment}.  If your test does not call this method,
-     * @param activity The Activity object that will be injected into the Fragment under test.
+     * Set the activity for use during the test. You must call this function
+     * before calling {@link #startFragment}. If your test does not call this
+     * method,
+     * 
+     * @param activity
+     *            The Activity object that will be injected into the Fragment
+     *            under test.
      */
     public void setActivity(FragmentActivity activity) {
         mActivity = activity;
     }
 
     /**
-     * If you wish to inject a Mock, Isolated, or otherwise altered context, you can do so
-     * here.  You must call this function before calling {@link #startFragment}.  If you wish to
-     * obtain a real Context, as a building block, use getInstrumentation().getTargetContext().
+     * If you wish to inject a Mock, Isolated, or otherwise altered context, you
+     * can do so here. You must call this function before calling
+     * {@link #startFragment}. If you wish to obtain a real Context, as a
+     * building block, use getInstrumentation().getTargetContext().
      */
     public void setFragmentContext(Context fragmentContext) {
         mFragmentContext = fragmentContext;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.uphyca.testing.junit3.support.v4.FragmentTestCase#getFragmentManager
+     * ()
+     */
+    @Override
+    protected FragmentManager getFragmentManager() {
+        if (mCreated) {
+            return getFragment().getFragmentManager();
+        }
+
+        if (mActivityAttached) {
+            FragmentManager fm = mActivity.getSupportFragmentManager();
+            getFragmentInstrumentation().setFragmentManager(fm);
+        }
+
+        try {
+            attachActivity(null);
+            FragmentManager fm = mActivity.getSupportFragmentManager();
+            getFragmentInstrumentation().setFragmentManager(fm);
+            return fm;
+        } catch (Exception e) {
+            assertNotNull(null);
+            return null;
+        }
+    }
+    
     /**
-     * This method will return the value if your Fragment under test calls 
+     * Returns the fragment manager.
+     * @return
+     */
+    protected FragmentActivity getActivity(){
+        return mActivity;
+    }
+
+    /**
+     * This method will return the value if your Fragment under test calls
      * {@link android.app.Activity#setRequestedOrientation}.
      */
     public int getRequestedOrientation() {
@@ -223,10 +290,12 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     }
 
     /**
-     * This method will return the launch intent if your Activity under test calls 
-     * {@link android.app.Activity#startActivity(Intent)} or 
+     * This method will return the launch intent if your Activity under test
+     * calls {@link android.app.Activity#startActivity(Intent)} or
      * {@link android.app.Activity#startActivityForResult(Intent, int)}.
-     * @return The Intent provided in the start call, or null if no start call was made.
+     * 
+     * @return The Intent provided in the start call, or null if no start call
+     *         was made.
      */
     public Intent getStartedActivityIntent() {
         if (mMockParent != null) {
@@ -236,9 +305,12 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     }
 
     /**
-     * This method will return the launch request code if your Activity under test calls 
+     * This method will return the launch request code if your Activity under
+     * test calls
      * {@link android.app.Activity#startActivityForResult(Intent, int)}.
-     * @return The request code provided in the start call, or -1 if no start call was made.
+     * 
+     * @return The request code provided in the start call, or -1 if no start
+     *         call was made.
      */
     public int getStartedActivityRequest() {
         if (mMockParent != null) {
@@ -248,10 +320,11 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     }
 
     /**
-     * This method will notify you if the Activity under test called 
-     * {@link android.app.Activity#finish()}, 
-     * {@link android.app.Activity#finishFromChild(Activity)}, or 
+     * This method will notify you if the Activity under test called
+     * {@link android.app.Activity#finish()},
+     * {@link android.app.Activity#finishFromChild(Activity)}, or
      * {@link android.app.Activity#finishActivity(int)}.
+     * 
      * @return Returns true if one of the listed finish methods was called.
      */
     public boolean isFinishCalled() {
@@ -262,9 +335,11 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     }
 
     /**
-     * This method will return the request code if the Activity under test called 
-     * {@link android.app.Activity#finishActivity(int)}.
-     * @return The request code provided in the start call, or -1 if no finish call was made.
+     * This method will return the request code if the Activity under test
+     * called {@link android.app.Activity#finishActivity(int)}.
+     * 
+     * @return The request code provided in the start call, or -1 if no finish
+     *         call was made.
      */
     public int getFinishedActivityRequest() {
         if (mMockParent != null) {
@@ -274,8 +349,8 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     }
 
     /**
-     * This mock Activity represents the "parent" activity.  By injecting this, we allow the user
-     * to call a few more Activity methods, including:
+     * This mock Activity represents the "parent" activity. By injecting this,
+     * we allow the user to call a few more Activity methods, including:
      * <ul>
      * <li>{@link android.app.Activity#getRequestedOrientation()}</li>
      * <li>{@link android.app.Activity#setRequestedOrientation(int)}</li>
@@ -284,7 +359,8 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      * <li>{@link android.app.Activity#finishFromChild(Activity child)}</li>
      * </ul>
      * 
-     * TODO: Make this overrideable, and the unit test can look for calls to other methods
+     * TODO: Make this overrideable, and the unit test can look for calls to
+     * other methods
      */
     private static class MockParent extends Activity {
 
@@ -295,7 +371,8 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         public int mFinishedActivityRequest = -1;
 
         /**
-         * Implementing in the parent allows the user to call this function on the tested activity.
+         * Implementing in the parent allows the user to call this function on
+         * the tested activity.
          */
         @Override
         public void setRequestedOrientation(int requestedOrientation) {
@@ -303,7 +380,8 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         }
 
         /**
-         * Implementing in the parent allows the user to call this function on the tested activity.
+         * Implementing in the parent allows the user to call this function on
+         * the tested activity.
          */
         @Override
         public int getRequestedOrientation() {
@@ -311,7 +389,8 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         }
 
         /**
-         * By returning null here, we inhibit the creation of any "container" for the window.
+         * By returning null here, we inhibit the creation of any "container"
+         * for the window.
          */
         @Override
         public Window getWindow() {

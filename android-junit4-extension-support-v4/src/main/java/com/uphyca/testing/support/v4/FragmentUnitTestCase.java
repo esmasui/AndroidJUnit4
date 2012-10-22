@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 public abstract class FragmentUnitTestCase<T extends Fragment> {
 
@@ -210,4 +211,21 @@ public abstract class FragmentUnitTestCase<T extends Fragment> {
         return _tester.startFragment(arguments, savedInstanceState, lastNonConfigurationInstance);
     }
 
+    /**
+     * Returns the fragment manager.
+     * 
+     * @return
+     */
+    public FragmentManager getFragmentManager() {
+        return _tester.getFragmentManager();
+    }
+
+    /**
+     * Returns the activity.
+     * 
+     * @return
+     */
+    public FragmentActivity getActivity() {
+        return _tester.getActivity();
+    }
 }

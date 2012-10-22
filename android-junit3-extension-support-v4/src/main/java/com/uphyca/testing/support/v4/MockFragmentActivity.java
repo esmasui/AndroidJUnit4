@@ -15,55 +15,12 @@
  */
 package com.uphyca.testing.support.v4;
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 /**
- * A mock {@link android.support.v4.app.FragmentActivity} class.  All methods are non-functional and throw 
- * {@link java.lang.UnsupportedOperationException}.  Override it as necessary to provide the 
- * operations that you need.
+ * A mock {@link android.support.v4.app.FragmentActivity} class. All methods are
+ * non-functional and throw {@link java.lang.UnsupportedOperationException}.
+ * Override it as necessary to provide the operations that you need.
  */
 public class MockFragmentActivity extends FragmentActivity {
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void onDestroy() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void onPause() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void onResume() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void onStart() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    protected void onStop() {
-        throw new UnsupportedOperationException();
-    }
-    
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(newBase);
-    }
 }

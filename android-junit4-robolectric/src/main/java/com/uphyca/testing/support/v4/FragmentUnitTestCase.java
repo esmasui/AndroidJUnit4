@@ -20,7 +20,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.After;
@@ -37,6 +36,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.test.mock.MockApplication;
 import android.view.Window;
 
@@ -66,6 +66,7 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
     private MockParent mMockParent;
     private boolean mAttached = false;
     private boolean mCreated = false;
+    private boolean mActivityAttached = false;
 
     public FragmentUnitTestCase(Class<T> fragmentClass) {
         mFragmentClass = fragmentClass;
@@ -126,25 +127,7 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
             setFragment(null);
             T newFragment = null;
             try {
-                IBinder token = null;
-                if (mApplication == null) {
-                    setApplication(new MockApplication());
-                }
-                if (mActivity == null) {
-                    setActivity(new MockFragmentActivity());
-                }
-                ComponentName cn = new ComponentName(mActivity.getClass()
-                                                              .getPackage()
-                                                              .getName(), mActivity.getClass()
-                                                                                   .getName());
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setComponent(cn);
-                ActivityInfo info = new ActivityInfo();
-                CharSequence title = mActivity.getClass()
-                                              .getName();
-                mMockParent = new MockParent();
-                String id = null;
-                ActivityTrojanHorse.callAttach(getInstrumentation(), mActivity, mFragmentContext, token, mApplication, intent, info, title, mMockParent, id, lastNonConfigurationInstance);
+                attachActivity(lastNonConfigurationInstance);
 
                 newFragment = Robolectric.newInstanceOf(mFragmentClass);
                 ShadowFragment shadow = Robolectric.shadowOf(newFragment);
@@ -179,6 +162,34 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         }
 
         return null;
+    }
+
+    private void attachActivity(Object lastNonConfigurationInstance) throws Exception {
+        if (mActivityAttached) {
+            return;
+        }
+
+        IBinder token = null;
+        if (mApplication == null) {
+            setApplication(new MockApplication());
+        }
+        if (mActivity == null) {
+            setActivity(new MockFragmentActivity());
+        }
+        ComponentName cn = new ComponentName(mActivity.getClass()
+                                                      .getPackage()
+                                                      .getName(), mActivity.getClass()
+                                                                           .getName());
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setComponent(cn);
+        ActivityInfo info = new ActivityInfo();
+        CharSequence title = mActivity.getClass()
+                                      .getName();
+        mMockParent = new MockParent();
+        String id = null;
+        ActivityTrojanHorse.callAttach(getInstrumentation(), mActivity, mFragmentContext, token, mApplication, intent, info, title, mMockParent, id, lastNonConfigurationInstance);
+
+        mActivityAttached = true;
     }
 
     /**
@@ -282,6 +293,41 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      */
     public void setFragmentContext(Context fragmentContext) {
         mFragmentContext = fragmentContext;
+    }
+
+    /**
+     * Returns the fragment manager.
+     * 
+     * @return
+     */
+    @Override
+    protected FragmentManager getFragmentManager() {
+        if (mCreated) {
+            return getFragment().getFragmentManager();
+        }
+        if (mActivityAttached) {
+            FragmentManager fm = mActivity.getSupportFragmentManager();
+            getFragmentInstrumentation().setFragmentManager(fm);
+        }
+
+        try {
+            attachActivity(null);
+            FragmentManager fm = mActivity.getSupportFragmentManager();
+            getFragmentInstrumentation().setFragmentManager(fm);
+            return fm;
+        } catch (Exception e) {
+            assertNotNull(null);
+            return null;
+        }
+    }
+
+    /**
+     * Returns the activity.
+     * 
+     * @return
+     */
+    public FragmentActivity getActivity() {
+        return mActivity;
     }
 
     /**

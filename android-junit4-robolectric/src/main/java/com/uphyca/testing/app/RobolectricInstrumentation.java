@@ -73,6 +73,13 @@ public class RobolectricInstrumentation extends Instrumentation {
     public Context getTargetContext() {
         return mAppContext;
     }
+    
+    /* (non-Javadoc)
+     * @see android.app.Instrumentation#getContext()
+     */
+    public Context getContext() {
+        return mAppContext;
+    }
 
     /*
      * (non-Javadoc)
