@@ -184,6 +184,7 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>libs</outputDirectory>
                                 </artifactItem>
+                                <!-- 
                                 <artifactItem>
                                     <groupId>com.uphyca</groupId>
                                     <artifactId>android-junit3-extension-support-v4</artifactId>
@@ -193,6 +194,7 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>lib-sources</outputDirectory>
                                 </artifactItem>
+                                -->
                                 <artifactItem>
                                     <groupId>com.google.android</groupId>
                                     <artifactId>support-v4</artifactId>
