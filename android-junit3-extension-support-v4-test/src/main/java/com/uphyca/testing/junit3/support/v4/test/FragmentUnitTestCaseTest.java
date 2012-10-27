@@ -40,6 +40,7 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
         public boolean onDettachCalled;
         public boolean onCreateViewCalled;
         public boolean onDestroyViewCalled;
+        private boolean onViewCreatedCalled;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,13 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
                 onCreateViewCalled = true;
             }
         }
+        
+        @Override
+        public void onViewCreated(View view,
+                                  Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            onViewCreatedCalled = true;
+        }
 
         @Override
         public void onDestroyView() {
@@ -158,7 +166,9 @@ public class FragmentUnitTestCaseTest extends FragmentUnitTestCase<MyFragment> {
 
         assertFalse(getFragment().onCreateViewCalled);
         assertFalse(getFragment().onActivityCreatedCalled);
+        assertFalse(getFragment().onCreateViewCalled);
         getFragmentInstrumentation().callFragmentOnActivityCreated();
+        assertTrue(getFragment().onCreateViewCalled);
         assertTrue(getFragment().onCreateViewCalled);
         assertTrue(getFragment().onActivityCreatedCalled);
 
