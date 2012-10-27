@@ -24,8 +24,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.After;
 import org.junit.Before;
 
-import com.xtremelabs.robolectric.Robolectric;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
@@ -34,8 +32,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.test.mock.MockApplication;
 import android.view.Window;
+
+import com.xtremelabs.robolectric.Robolectric;
 
 public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityTestCase {
 
@@ -49,7 +48,6 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
     private boolean mCreated = false;
 
     public ActivityUnitTestCase(Class<T> activityClass) {
-        super();
         mActivityClass = activityClass;
     }
 
@@ -65,7 +63,7 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
         super.setUp();
         mActivityContext = getInstrumentation().getTargetContext();
     }
-
+    
     protected T startActivity(Intent intent,
                               Bundle savedInstanceState,
                               Object lastNonConfigurationInstance) {
@@ -78,10 +76,9 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
             try {
                 IBinder token = null;
                 if (mApplication == null) {
-                    setApplication(new MockApplication());
+                    setApplication(Robolectric.application);
                 }
-                ComponentName cn = new ComponentName(mActivityClass.getPackage()
-                                                                   .getName(), mActivityClass.getName());
+                ComponentName cn = new ComponentName(mActivityClass.getPackage().getName(), mActivityClass.getName());
                 intent.setComponent(cn);
                 ActivityInfo info = new ActivityInfo();
                 CharSequence title = mActivityClass.getName();
@@ -116,6 +113,7 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
 
     public void setApplication(Application application) {
         mApplication = application;
+        Robolectric.application = mApplication;
     }
 
     public void setActivityContext(Context activityContext) {
@@ -124,34 +122,34 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
 
     public int getRequestedOrientation() {
         return Robolectric.shadowOf(getActivity()).getRequestedOrientation();
-//        if (mMockParent != null) {
-//            return mMockParent.mRequestedOrientation;
-//        }
-//        return 0;
+        //        if (mMockParent != null) {
+        //            return mMockParent.mRequestedOrientation;
+        //        }
+        //        return 0;
     }
 
     public Intent getStartedActivityIntent() {
         return Robolectric.shadowOf(getActivity()).getNextStartedActivity();
-//        if (mMockParent != null) {
-//            return mMockParent.mStartedActivityIntent;
-//        }
-//        return null;
+        //        if (mMockParent != null) {
+        //            return mMockParent.mStartedActivityIntent;
+        //        }
+        //        return null;
     }
 
     public int getStartedActivityRequest() {
         return Robolectric.shadowOf(getActivity()).getNextStartedActivityForResult().requestCode;
-//        if (mMockParent != null) {
-//            return mMockParent.mStartedActivityRequest;
-//        }
-//        return 0;
+        //        if (mMockParent != null) {
+        //            return mMockParent.mStartedActivityRequest;
+        //        }
+        //        return 0;
     }
 
     public boolean isFinishCalled() {
         return Robolectric.shadowOf(getActivity()).isFinishing();
-//        if (mMockParent != null) {
-//            return mMockParent.mFinished;
-//        }
-//        return false;
+        //        if (mMockParent != null) {
+        //            return mMockParent.mFinished;
+        //        }
+        //        return false;
     }
 
     public int getFinishedActivityRequest() {

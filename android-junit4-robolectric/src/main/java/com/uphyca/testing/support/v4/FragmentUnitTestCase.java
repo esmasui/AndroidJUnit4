@@ -37,7 +37,6 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.test.mock.MockApplication;
 import android.view.Window;
 
 import com.xtremelabs.robolectric.Robolectric;
@@ -171,7 +170,7 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
 
         IBinder token = null;
         if (mApplication == null) {
-            setApplication(new MockApplication());
+            setApplication(Robolectric.application);
         }
         if (mActivity == null) {
             setActivity(new MockFragmentActivity());
@@ -270,6 +269,7 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      */
     public void setApplication(Application application) {
         mApplication = application;
+        Robolectric.application = mApplication;
     }
 
     /**
