@@ -40,6 +40,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.Window;
 
 import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.shadows.ShadowActivity.IntentForResult;
 import com.xtremelabs.robolectric.shadows.ShadowApplication;
 import com.xtremelabs.robolectric.shadows.ShadowFragment;
 import com.xtremelabs.robolectric.tester.android.util.TestFragmentManager;
@@ -392,8 +393,13 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
         // return mMockParent.mStartedActivityRequest;
         // }
         // return 0;
-        return Robolectric.shadowOf(mActivity)
-                          .getNextStartedActivityForResult().requestCode;
+        IntentForResult result = Robolectric.shadowOf(mActivity)
+                                            .getNextStartedActivityForResult();
+        if (result == null) {
+            return -1;
+        }
+
+        return result.requestCode;
     }
 
     /**
