@@ -40,6 +40,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.Window;
 
 import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.shadows.ShadowApplication;
 import com.xtremelabs.robolectric.shadows.ShadowFragment;
 import com.xtremelabs.robolectric.tester.android.util.TestFragmentManager;
 
@@ -268,8 +269,26 @@ public abstract class FragmentUnitTestCase<T extends Fragment> extends FragmentT
      *            under test.
      */
     public void setApplication(Application application) {
+        if (application == Robolectric.application) {
+            return;
+        }
+
+        bindApplication(application);
         mApplication = application;
-        Robolectric.application = mApplication;
+        Robolectric.application = application;
+    }
+
+    public Application bindApplication(Application application) {
+
+        ShadowApplication shadowApplication = shadowOf(application);
+        ShadowApplication.bind(application, Robolectric.getShadowApplication()
+                                                       .getResourceLoader());
+        shadowApplication.setPackageName(Robolectric.getShadowApplication()
+                                                    .getPackageName());
+        shadowApplication.setPackageManager(Robolectric.getShadowApplication()
+                                                       .getPackageManager());
+
+        return application;
     }
 
     /**

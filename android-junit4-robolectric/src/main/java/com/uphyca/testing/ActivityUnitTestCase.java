@@ -18,6 +18,7 @@
  */
 package com.uphyca.testing;
 
+import static com.xtremelabs.robolectric.Robolectric.shadowOf;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
@@ -35,6 +36,7 @@ import android.os.IBinder;
 import android.view.Window;
 
 import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.shadows.ShadowApplication;
 
 public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityTestCase {
 
@@ -63,7 +65,7 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
         super.setUp();
         mActivityContext = getInstrumentation().getTargetContext();
     }
-    
+
     protected T startActivity(Intent intent,
                               Bundle savedInstanceState,
                               Object lastNonConfigurationInstance) {
@@ -78,7 +80,8 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
                 if (mApplication == null) {
                     setApplication(Robolectric.application);
                 }
-                ComponentName cn = new ComponentName(mActivityClass.getPackage().getName(), mActivityClass.getName());
+                ComponentName cn = new ComponentName(mActivityClass.getPackage()
+                                                                   .getName(), mActivityClass.getName());
                 intent.setComponent(cn);
                 ActivityInfo info = new ActivityInfo();
                 CharSequence title = mActivityClass.getName();
@@ -112,8 +115,26 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
     }
 
     public void setApplication(Application application) {
+        if (application == Robolectric.application) {
+            return;
+        }
+
+        bindApplication(application);
         mApplication = application;
-        Robolectric.application = mApplication;
+        Robolectric.application = application;
+    }
+
+    public Application bindApplication(Application application) {
+
+        ShadowApplication shadowApplication = shadowOf(application);
+        ShadowApplication.bind(application, Robolectric.getShadowApplication()
+                                                       .getResourceLoader());
+        shadowApplication.setPackageName(Robolectric.getShadowApplication()
+                                                    .getPackageName());
+        shadowApplication.setPackageManager(Robolectric.getShadowApplication()
+                                                       .getPackageManager());
+
+        return application;
     }
 
     public void setActivityContext(Context activityContext) {
@@ -121,39 +142,44 @@ public abstract class ActivityUnitTestCase<T extends Activity> extends ActivityT
     }
 
     public int getRequestedOrientation() {
-        return Robolectric.shadowOf(getActivity()).getRequestedOrientation();
-        //        if (mMockParent != null) {
-        //            return mMockParent.mRequestedOrientation;
-        //        }
-        //        return 0;
+        return Robolectric.shadowOf(getActivity())
+                          .getRequestedOrientation();
+        // if (mMockParent != null) {
+        // return mMockParent.mRequestedOrientation;
+        // }
+        // return 0;
     }
 
     public Intent getStartedActivityIntent() {
-        return Robolectric.shadowOf(getActivity()).getNextStartedActivity();
-        //        if (mMockParent != null) {
-        //            return mMockParent.mStartedActivityIntent;
-        //        }
-        //        return null;
+        return Robolectric.shadowOf(getActivity())
+                          .getNextStartedActivity();
+        // if (mMockParent != null) {
+        // return mMockParent.mStartedActivityIntent;
+        // }
+        // return null;
     }
 
     public int getStartedActivityRequest() {
-        return Robolectric.shadowOf(getActivity()).getNextStartedActivityForResult().requestCode;
-        //        if (mMockParent != null) {
-        //            return mMockParent.mStartedActivityRequest;
-        //        }
-        //        return 0;
+        return Robolectric.shadowOf(getActivity())
+                          .getNextStartedActivityForResult().requestCode;
+        // if (mMockParent != null) {
+        // return mMockParent.mStartedActivityRequest;
+        // }
+        // return 0;
     }
 
     public boolean isFinishCalled() {
-        return Robolectric.shadowOf(getActivity()).isFinishing();
-        //        if (mMockParent != null) {
-        //            return mMockParent.mFinished;
-        //        }
-        //        return false;
+        return Robolectric.shadowOf(getActivity())
+                          .isFinishing();
+        // if (mMockParent != null) {
+        // return mMockParent.mFinished;
+        // }
+        // return false;
     }
 
     public int getFinishedActivityRequest() {
-        return Robolectric.shadowOf(getActivity()).getResultCode();
+        return Robolectric.shadowOf(getActivity())
+                          .getResultCode();
     }
 
     private static class MockParent extends Activity {
