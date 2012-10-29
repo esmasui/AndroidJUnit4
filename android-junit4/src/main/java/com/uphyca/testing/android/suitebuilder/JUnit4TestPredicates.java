@@ -16,6 +16,7 @@
 
 package com.uphyca.testing.android.suitebuilder;
 
+import org.junit.Ignore;
 import org.junit.runner.Description;
 
 import android.test.InstrumentationTestCase;
@@ -53,6 +54,6 @@ public class JUnit4TestPredicates {
     public static final Predicate<Description> SELECT_MEDIUM = new JUnit4HasAnnotation(MediumTest.class);
     public static final Predicate<Description> SELECT_LARGE = new JUnit4HasAnnotation(LargeTest.class);
     public static final Predicate<Description> REJECT_SUPPRESSED =
-            Predicates.not(new JUnit4HasAnnotation(Suppress.class));
+            Predicates.not(Predicates.or(new JUnit4HasAnnotation(Suppress.class), new JUnit4HasAnnotation(Ignore.class)));
 
 }
