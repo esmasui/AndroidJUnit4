@@ -7,3 +7,5 @@ target/
 gen/
 bin/
 libs/
+tmp/
+local.properties
