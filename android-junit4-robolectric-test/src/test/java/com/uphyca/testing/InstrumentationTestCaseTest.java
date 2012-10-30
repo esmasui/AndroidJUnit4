@@ -89,12 +89,10 @@ public class InstrumentationTestCaseTest extends InstrumentationTestCase {
         assertNull(activityInfo);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void shouldNotLaunchActivity() {
-        // Robolectric doesn't implements PackageManager.getActivityInfo() that
-        // is the method called from launcheActivity().
-        @SuppressWarnings("unused")
+    @Test
+    public void shouldLaunchActivity() {
         Activity activity = launchActivity(TEST_PACKAGE_NAME, MainActivity.class, null);
+        assertNotNull(activity);
     }
 
     @Test(expected = Expected.class)

@@ -18,13 +18,13 @@
  */
 package com.uphyca.testing.app;
 
-import java.util.ArrayList;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.List;
 
 import android.app.Activity;
 import android.app.Application;
 import android.app.Instrumentation;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -73,8 +73,10 @@ public class RobolectricInstrumentation extends Instrumentation {
     public Context getTargetContext() {
         return mAppContext;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.app.Instrumentation#getContext()
      */
     public Context getContext() {
@@ -232,37 +234,53 @@ public class RobolectricInstrumentation extends Instrumentation {
         synchronized (mSync) {
             intent = new Intent(intent);
 
-            ActivityInfo ai = intent.resolveActivityInfo(getTargetContext().getPackageManager(), 0);
-            if (ai == null) {
-                throw new RuntimeException("Unable to resolve activity for: " + intent);
-            }
-            // String myProc = mThread.getProcessName();
-            // if (!ai.processName.equals(myProc)) {
-            // // todo: if this intent is ambiguous, look here to see if
-            // // there is a single match that is in our package.
-            // throw new RuntimeException("Intent in process " + myProc +
-            // " resolved to different process " + ai.processName + ": " +
+            // ActivityInfo ai =
+            // intent.resolveActivityInfo(getTargetContext().getPackageManager(),
+            // 0);
+            // if (ai == null) {
+            // throw new RuntimeException("Unable to resolve activity for: " +
             // intent);
             // }
+            // // String myProc = mThread.getProcessName();
+            // // if (!ai.processName.equals(myProc)) {
+            // // // todo: if this intent is ambiguous, look here to see if
+            // // // there is a single match that is in our package.
+            // // throw new RuntimeException("Intent in process " + myProc +
+            // // " resolved to different process " + ai.processName + ": " +
+            // // intent);
+            // // }
+            //
+            // intent.setComponent(new
+            // ComponentName(ai.applicationInfo.packageName, ai.name));
+            // final ActivityWaiter aw = new ActivityWaiter(intent);
+            //
+            // if (mWaitingActivities == null) {
+            // mWaitingActivities = new ArrayList();
+            // }
+            // mWaitingActivities.add(aw);
 
-            intent.setComponent(new ComponentName(ai.applicationInfo.packageName, ai.name));
-            final ActivityWaiter aw = new ActivityWaiter(intent);
-
-            if (mWaitingActivities == null) {
-                mWaitingActivities = new ArrayList();
+            Activity activity = null;
+            try {
+                activity = (Activity) Class.forName(intent.getComponent()
+                                                           .getClassName())
+                                            .newInstance();
+            } catch (Exception e) {
+                assertNotNull(activity);
             }
-            mWaitingActivities.add(aw);
+            Robolectric.shadowOf(activity).setIntent(intent);
+            callActivityOnCreate(activity, null);
+            callActivityOnStart(activity);
+            callActivityOnResume(activity);
 
-            getTargetContext().startActivity(intent);
-
-            do {
-                try {
-                    mSync.wait();
-                } catch (InterruptedException e) {
-                }
-            } while (mWaitingActivities.contains(aw));
-
-            return aw.activity;
+            return activity;
+            // do {
+            // try {
+            // mSync.wait();
+            // } catch (InterruptedException e) {
+            // }
+            // } while (mWaitingActivities.contains(aw));
+            //
+            // return aw.activity;
         }
     }
 
