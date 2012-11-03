@@ -44,11 +44,15 @@ class JUnit4HasMethodAnnotation implements Predicate<Description> {
 
     public boolean apply(Description description) {
         Method method;
-        
+
         //For Parametarized
         String methodName = description.getMethodName();
-        int parameterIndex = description.getMethodName().indexOf('[');
-        if (parameterIndex > -1){
+        if (methodName == null) {
+            return false;
+        }
+
+        int parameterIndex = methodName.indexOf('[');
+        if (parameterIndex > -1) {
             methodName = methodName.substring(0, parameterIndex);
         }
 
@@ -58,10 +62,10 @@ class JUnit4HasMethodAnnotation implements Predicate<Description> {
             //throw new RuntimeException(description.toString(), e);
             return false;
         }
-//        if (method == null){
-//            throw new RuntimeException("No such method for " + description);
-//        }
+        //        if (method == null){
+        //            throw new RuntimeException("No such method for " + description);
+        //        }
         return method.getAnnotation(annotationClass) != null;
-//      return description.getAnnotation(annotationClass) != null;
+        //      return description.getAnnotation(annotationClass) != null;
     }
 }
