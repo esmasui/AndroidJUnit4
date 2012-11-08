@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import org.junit.runners.model.InitializationError;
 
+import com.uphyca.testing.shadows.CustomShadowDialogFragment;
 import com.uphyca.testing.shadows.CustomShadowFragment;
 import com.uphyca.testing.shadows.CustomShadowTimePicker;
 import com.xtremelabs.robolectric.Robolectric;
@@ -51,6 +52,7 @@ public class AndroidTestRunner extends RobolectricTestRunner {
     @Override
     public void beforeTest(Method method) {
         Robolectric.bindShadowClass(CustomShadowFragment.class);
+        Robolectric.bindShadowClass(CustomShadowDialogFragment.class);
         Robolectric.bindShadowClass(CustomShadowTimePicker.class);
     }
 }
