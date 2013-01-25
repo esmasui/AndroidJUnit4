@@ -4,14 +4,14 @@
 
     <groupId>com.uphyca</groupId>
     <artifactId>android-junit4-robolectric-test</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>android-junit4-robolectric-test</name>
 
 	<parent>
 		<groupId>com.uphyca</groupId>
 		<artifactId>android-junit4-parent</artifactId>
-		<version>0.1</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
     <properties>
@@ -65,7 +65,7 @@
         <dependency>
             <groupId>com.uphyca</groupId>
             <artifactId>android-junit4-robolectric</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         
