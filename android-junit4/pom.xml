@@ -3,7 +3,7 @@
 
 	<groupId>com.uphyca</groupId>
 	<artifactId>android-junit4</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.3</version>
 	<packaging>jar</packaging>
 	<name>Android JUnit4</name>
 	<description>Tools for Android testing with JUnit4</description>
@@ -40,7 +40,7 @@
 	<parent>
 		<groupId>com.uphyca</groupId>
 		<artifactId>android-junit4-parent</artifactId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.1</version>
 	</parent>
 
 	<dependencies>
