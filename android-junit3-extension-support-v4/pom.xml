@@ -6,6 +6,12 @@
 	<artifactId>android-junit3-extension-support-v4</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>com.uphyca</groupId>
+		<artifactId>android-junit4-parent</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
 	
 	<dependencies>
 		<dependency>

@@ -38,10 +38,11 @@
 	</organization>
 
 	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<groupId>com.uphyca</groupId>
+		<artifactId>android-junit4-parent</artifactId>
+		<version>0.1-SNAPSHOT</version>
 	</parent>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
