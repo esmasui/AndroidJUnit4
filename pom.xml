@@ -6,6 +6,44 @@
 	<artifactId>android-junit4-parent</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<name>Android JUnit4(Parent)</name>
+
+	<description>Tools for Android testing with JUnit4</description>
+	<url>https://github.com/esmasui/AndroidJUnit4</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<scm>
+		<url>https://github.com/esmasui/AndroidJUnit4/</url>
+		<connection>scm:git:git://github.com/esmasui/AndroidJUnit4.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/esmasui/AndroidJUnit4.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/esmasui/AndroidJUnit4/issues</url>
+	</issueManagement>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<organization>
+		<name>uPhyca Inc.</name>
+		<url>http://www.uphyca.com/</url>
+	</organization>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
 	<modules>
 		<module>android-junit4</module>
