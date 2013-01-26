@@ -27,6 +27,15 @@ Build instruction;
     5. Import AndroidJunit4-readonly/android-junit4 as a Android library project or jar file to your Android test project.
 
 
+You can also depend on the .jar through Maven:
+
+	<dependency>
+		<groupId>com.uphyca</groupId>
+		<artifactId>android-junit4</artifactId>
+		<version>(insert latest version)</version>
+	</dependency>
+
+
 Continuous integration;
     http://jenkins.android-tec.org/job/JUnit4InstrumentationTestRunnerMaven/
 
