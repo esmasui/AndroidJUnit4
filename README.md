@@ -34,6 +34,27 @@ You can also depend on the .jar through Maven:
 		<artifactId>android-junit4</artifactId>
 		<version>(insert latest version)</version>
 	</dependency>
+	
+	
+
+If you need to run tests with maven-android-plugin, you need to set testSkip parameter to false in your configuration
+
+	<plugin>
+		<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+		<artifactId>android-maven-plugin</artifactId>
+		<configuration>
+			...
+			<test>
+				<skip>false</skip>
+			</test>
+		</configuration>
+
+	</plugin>
+	
+or set android.test.skip environment to false
+
+	$ mvn clean install -Dandroid.test.skip=false
+	
 
 
 Continuous integration;
