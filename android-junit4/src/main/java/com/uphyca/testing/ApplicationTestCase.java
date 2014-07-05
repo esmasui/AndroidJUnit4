@@ -151,4 +151,8 @@ public abstract class ApplicationTestCase<T extends Application> {
     protected void scrubClass(Class<?> testCaseClass) throws IllegalAccessException {
         _tester.scrubClass(testCaseClass);
     }
+
+    protected void createApplication() {
+        _tester.doCreateApplication();
+    }
 }
