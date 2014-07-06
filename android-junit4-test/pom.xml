@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.uphyca</groupId>
             <artifactId>android-junit4</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
         
 		<dependency>
