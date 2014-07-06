@@ -3,7 +3,7 @@
 
 	<groupId>com.uphyca</groupId>
 	<artifactId>android-junit4-parent</artifactId>
-	<version>0.5-SNAPSHOT</version>
+	<version>0.5</version>
 	<packaging>pom</packaging>
 	<name>Android JUnit4(Parent)</name>
 

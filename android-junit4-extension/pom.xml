@@ -3,13 +3,13 @@
 
 	<groupId>com.uphyca</groupId>
 	<artifactId>android-junit4-extension</artifactId>
-	<version>0.5-SNAPSHOT</version>
+	<version>0.5</version>
 	<packaging>jar</packaging>
 	
 	<parent>
 		<groupId>com.uphyca</groupId>
 		<artifactId>android-junit4-parent</artifactId>
-		<version>0.5-SNAPSHOT</version>
+		<version>0.5</version>
 	</parent>
 
 	<dependencies>
@@ -30,13 +30,13 @@
         <dependency>
             <groupId>com.uphyca</groupId>
             <artifactId>android-junit4</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
 
         <dependency>
             <groupId>com.uphyca</groupId>
             <artifactId>android-junit3-extension</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         
 		<dependency>
