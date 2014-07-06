@@ -3,7 +3,7 @@
 
 	<groupId>com.uphyca</groupId>
 	<artifactId>android-junit4-parent</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Android JUnit4(Parent)</name>
 
@@ -54,7 +54,6 @@
 		<module>android-junit4-extension-support-v4</module>
 
 		<module>android-junit4-test</module>
-		<module>android-junit4-robolectric-test</module>
 		<module>android-junit3-extension-support-v4-test</module>
 		<module>android-junit4-test-mockito</module>
 		<module>android-junit3-dbunit-test</module>
