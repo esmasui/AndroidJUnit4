@@ -50,4 +50,8 @@ class ApplicationTester<T extends Application> extends ApplicationTestCase<T> {
     public void scrubClass(Class<?> testCaseClass) throws IllegalAccessException {
         super.scrubClass(testCaseClass);
     }
+
+    public void doCreateApplication() {
+        super.createApplication();
+    }
 }

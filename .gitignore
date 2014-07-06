@@ -9,3 +9,8 @@ bin/
 libs/
 tmp/
 local.properties
+
+*.iml
+*.ipr
+*.iws
+*.idea
