@@ -227,14 +227,14 @@ public class JUnit4TestSuiteBuilder {
 
         for (Description desc : descriptions) {
             testCaseClasses.add(desc.getTestClass());
-            //            //if (desc.isTest() || desc.isSuite()) {
-            //                Filter newFilter = (desc.getMethodName() != null) ? Filter.matchMethodDescription(desc) : Filters.matchSuiteDescription(desc);
-            //                if (filters == null) {
-            //                    filters = newFilter;
-            //                } else {
-            //                    filters = Filters.union(filters, newFilter);
-            //                }
-            //            //}
+            if (desc.isTest() || desc.isSuite()) {
+                Filter newFilter = (desc.getMethodName() != null) ? Filter.matchMethodDescription(desc) : Filters.matchSuiteDescription(desc);
+                if (filters == null) {
+                    filters = newFilter;
+                } else {
+                    filters = Filters.union(filters, newFilter);
+                }
+            }
         }
 
         //FIXME Supports subclasses of Computer such as ParallelComputer.
