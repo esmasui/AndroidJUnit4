@@ -1,4 +1,6 @@
-Jenkins-CI [![Build Status](http://jenkins.android-tec.org/job/JUnit4InstrumentationTestRunnerMaven/badge/icon)](http://jenkins.android-tec.org/job/JUnit4InstrumentationTestRunnerMaven/)
+# DEPRECATED
+
+This project is now deprecated.  [AndroidJUnitRunner](https://code.google.com/p/android-test-kit/wiki/AndroidJUnitRunnerUserGuide) is now available.
 
 AndroidJUnit4
 =============
